@@ -247,16 +247,17 @@ window.Quarto = {
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>sns.set_theme()</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>sns.set_style(<span class="st">"ticks"</span>)</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>sns.color_palette(<span class="st">"dark"</span>)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>plt.rc(<span class="st">"axes.spines"</span>, top<span class="op">=</span><span class="va">False</span>, right<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>plt.rc(<span class="st">"figure"</span>, figsize<span class="op">=</span> (<span class="dv">12</span>,<span class="dv">8</span>))</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># generate synthetic data</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> np.arange(<span class="dv">0</span>,<span class="dv">10</span>, <span class="fl">0.1</span>)</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> t<span class="op">**</span><span class="fl">0.5</span> <span class="op">+</span> np.random.randn(<span class="bu">len</span>(t))<span class="op">*</span><span class="fl">0.3</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(x<span class="op">=</span>t, y<span class="op">=</span>x)<span class="op">;</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Generated data"</span>)<span class="op">;</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"t"</span>)<span class="op">;</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"x"</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>sns.set_context(<span class="st">"poster"</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>plt.rc(<span class="st">"axes.spines"</span>, top<span class="op">=</span><span class="va">False</span>, right<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>plt.rc(<span class="st">"figure"</span>, figsize<span class="op">=</span> (<span class="dv">12</span>,<span class="dv">8</span>))</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># generate synthetic data</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> np.arange(<span class="dv">0</span>,<span class="dv">10</span>, <span class="fl">0.1</span>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> t<span class="op">**</span><span class="fl">0.5</span> <span class="op">+</span> np.random.randn(<span class="bu">len</span>(t))<span class="op">*</span><span class="fl">0.3</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(x<span class="op">=</span>t, y<span class="op">=</span>x)<span class="op">;</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Generated data"</span>)<span class="op">;</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"t"</span>)<span class="op">;</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"x"</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -496,7 +497,7 @@ window.Quarto = {
 <div id="cell-36" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> blackjax</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>num_warmup <span class="op">=</span> <span class="dv">10000</span></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>num_samples <span class="op">=</span> <span class="dv">1000</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>num_samples <span class="op">=</span> <span class="dv">5000</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="cell-37" class="cell" data-execution_count="20">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>rng_key <span class="op">=</span> PRNGKey(<span class="dv">0</span>)</span>
@@ -580,7 +581,7 @@ window.Quarto = {
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>res <span class="op">=</span> jax.vmap(eval_fn, in_axes<span class="op">=</span>(<span class="dv">0</span>, <span class="va">None</span>))(posterior_params, t).squeeze()</span>
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="co"># predict out of sample</span></span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>t_oos<span class="op">=</span>jnp.arange(<span class="dv">0</span>,<span class="dv">20</span>,<span class="fl">.1</span>)</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>t_oos<span class="op">=</span>jnp.arange(<span class="dv">0</span>,<span class="dv">15</span>,<span class="fl">.1</span>)</span>
 <span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>res_oos <span class="op">=</span> jax.vmap(eval_fn, in_axes<span class="op">=</span>(<span class="dv">0</span>, <span class="va">None</span>))(posterior_params, t_oos).squeeze()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="cell-45" class="cell" data-execution_count="27">
@@ -606,19 +607,19 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<div id="cell-47" class="cell" data-execution_count="33">
+<div id="cell-47" class="cell" data-execution_count="29">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>means<span class="op">=</span>df_oos.mean(axis<span class="op">=</span><span class="dv">1</span>)</span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>stds <span class="op">=</span> df_oos.std(axis<span class="op">=</span><span class="dv">1</span>)</span>
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>sns.lineplot(x<span class="op">=</span>t_oos, y<span class="op">=</span>means)<span class="op">;</span></span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>sns.lineplot(x<span class="op">=</span>t_oos, y<span class="op">=</span>np.sqrt(t_oos), alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
-<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>sns.lineplot(x<span class="op">=</span>t_oos, y<span class="op">=</span>means <span class="op">+</span> stds, color<span class="op">=</span><span class="st">"k"</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)<span class="op">;</span></span>
-<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>sns.lineplot(x<span class="op">=</span>t_oos, y<span class="op">=</span>means <span class="op">-</span> stds, color<span class="op">=</span><span class="st">"k"</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)<span class="op">;</span></span>
-<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(x<span class="op">=</span>t, y<span class="op">=</span>x)<span class="op">;</span></span>
-<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="vs">r"BNN mean ± std out of sample"</span>)<span class="op">;</span></span>
-<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"t"</span>)<span class="op">;</span></span>
-<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="vs">r"$f_{\theta}(t)$"</span>)<span class="op">;</span></span>
-<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>plt.legend([<span class="st">"BNN mean"</span>, <span class="st">"Truth"</span>, <span class="vs">r"$\sigma$ credibility intervals"</span>])<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>sns.lineplot(x<span class="op">=</span>t_oos, y<span class="op">=</span>np.sqrt(t_oos), alpha<span class="op">=</span><span class="dv">1</span>, color<span class="op">=</span><span class="st">"r"</span>)<span class="op">;</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>plt.plot(t_oos,df_oos.sample(axis<span class="op">=</span><span class="dv">1</span>, n<span class="op">=</span><span class="dv">500</span>), alpha<span class="op">=</span><span class="fl">0.02</span>, color<span class="op">=</span><span class="st">"k"</span>)<span class="op">;</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(x<span class="op">=</span>t, y<span class="op">=</span>x, alpha<span class="op">=</span><span class="fl">0.3</span>)<span class="op">;</span></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="vs">r"BNN posterior predictive samples"</span>)<span class="op">;</span></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"t"</span>)<span class="op">;</span></span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="vs">r"$f_{\theta}(t)$"</span>)<span class="op">;</span></span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>plt.legend([<span class="st">"Truth"</span>,<span class="st">"Samples"</span>])<span class="op">;</span></span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>plt.ylim(<span class="dv">0</span>,<span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">

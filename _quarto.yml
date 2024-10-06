@@ -8,9 +8,9 @@ website:
     right:
       - about.qmd
       - icon: github
-        href: https://github.com/
-      - icon: twitter
-        href: https://twitter.com
+        href: https://github.com/sodavann
+      - icon: linkedin
+        href: https://www.linkedin.com/leo-andersson
 format:
   html:
     theme: lux

@@ -1,0 +1,33 @@
+{
+  "index.qmd": {
+    "index.html": "1abfd40f"
+  },
+  "about.qmd": {
+    "about.html": "de72a967"
+  },
+  "posts/post-with-code/index.qmd": {
+    "index.html": "36d4e6b3"
+  },
+  "posts/welcome/index.qmd": {
+    "index.html": "9152ceb2"
+  },
+  "posts/post-with-code/bn.ipynb": {
+    "bn.html": "b8c48dcb"
+  },
+  "posts/post-with-code/Bayesian Connections/bn.ipynb": {
+    "bn.html": "62aa81a9"
+  },
+  "posts/Bayesian Connections/bn.ipynb": {
+    "bn.html": "f197573f"
+  },
+  "posts/Bayesian Connections/index.qmd": {
+    "index.html": "aac5e560"
+  },
+  "posts/Bayesian Connections/code/bn.ipynb": {
+    "bn.html": "b4953abc",
+    "index.html": "cad970cc"
+  },
+  "posts/Bayesian Persuasion/bn.ipynb": {
+    "bn.html": "0181cdf9"
+  }
+}

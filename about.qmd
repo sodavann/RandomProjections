@@ -5,10 +5,10 @@ about:
   links:
     - icon: linkedin
       text: LinkedIn
-      href: https://linkedin.com/leo-andersson
+      href: https://linkedin.com/leo-andersson/
     - icon: github
       text: Github
-      href: https://github.com/sodavann
+      href: https://github.com/sodavann/
 
 ---
 

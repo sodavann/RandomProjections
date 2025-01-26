@@ -10,7 +10,7 @@ website:
       - icon: github
         href: https://github.com/sodavann/
       - icon: linkedin
-        href: https://www.linkedin.com/leo-andersson/
+        href: https://www.linkedin.com/in/leo-andersson/
 format:
   html:
     theme: lux

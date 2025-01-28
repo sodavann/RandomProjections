@@ -360,13 +360,13 @@ window.Quarto = {
 </div>
 <p>We have successfully sampled from the posterior distribution <span class="math inline">\(p(\theta|x)\)</span> and found that <span class="math inline">\(\theta \approx 0.38\)</span> with quite some certainty.</p>
 <p>What about the predicted values <span class="math inline">\(\tilde{x}(t)\)</span> given this model? This is also probabilistic given the posterior distribution of <span class="math inline">\(\theta\)</span>. These values are distributed according to the posterior predictive distribution <span class="math display">\[p(\tilde{x}(t)|x) = \int p(\tilde{x}(t)|\theta ) p(\theta|x(t)) d\theta\]</span></p>
-<p>This involves sampling <span class="math inline">\(p(\tilde{x}(t)| \theta) \sim N(\mu_x = \theta t, \sigma_x = 1)\)</span>, but in the following sections we’ll drop the aleatoric uncertainty <span class="math inline">\(\sigma_x\)</span> and only consider the epistemic uncertainty in the model parameters.</p>
+<p>This involves sampling <span class="math inline">\(\tilde{x}(t) \sim N(\mu_x = \theta t, \sigma_x = 1)\)</span>, but in the following sections we’ll drop the aleatoric uncertainty <span class="math inline">\(\sigma_x\)</span> and only consider the epistemic uncertainty in the model parameters.</p>
 <p>We’re essentially looking for the probability of the mean of <span class="math inline">\(\tilde{x}\)</span> given all our data x by averaging over <span class="math inline">\(\theta\)</span> from the posterior.</p>
-<p>For example <span class="math inline">\(\tilde{x}|t=4\)</span></p>
+<p>For example <span class="math inline">\(\tilde{x}(t=4).\)</span></p>
 <div id="cell-16" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>posterior_predictive_samples<span class="op">=</span>[lm(theta, <span class="dv">4</span>) <span class="cf">for</span> theta <span class="kw">in</span> posterior_samples]</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>sns.histplot(posterior_predictive_samples, bins<span class="op">=</span><span class="dv">30</span>, stat<span class="op">=</span><span class="st">"probability"</span>)<span class="op">;</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="vs">r"posterior predictive $p(\tilde</span><span class="sc">{x}</span><span class="vs">(t=4)|x)$"</span>)<span class="op">;</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="vs">r"$\mathbf</span><span class="sc">{E}</span><span class="vs">_{\theta \sim p(\theta x)} [\tilde</span><span class="sc">{x}</span><span class="vs">(t=4)|\theta]$"</span>)<span class="op">;</span></span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="vs">r"$\tilde</span><span class="sc">{x}</span><span class="vs">(t=4)$"</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
@@ -466,12 +466,12 @@ window.Quarto = {
 <p><span class="math display">\[ x(t) \sim N(f_{\theta}(t), \sigma)\]</span></p>
 <p>Performing a maximum likelihood fit we would maximize the log likelihood <span class="math display">\[\log {p(x(t) | \theta)} = \log{ \frac{e^{-\frac{\Vert x-f_{\theta}(t) \Vert^2}{2 \sigma^2}}}{\sqrt{2\pi \sigma^2}}} \propto C - \Vert x - f_{\theta}(t) \Vert^2\]</span></p>
 <p>Maximizing the Gaussian log likelihood is the same as minimizing our MSE loss function.</p>
-<p>One possible remedy for overfitting is regularization of the neural network parameters, for example <span class="math inline">\(L_2\)</span>-regularization would add a term <span class="math inline">\(\beta \Vert \theta \Vert^2\)</span> to the loss function, thereby penalizing large weights. This generally has a smoothing effect on the output.</p>
+<p>One possible remedy for overfitting is regularization of the neural network parameters, for example <span class="math inline">\(L_2\)</span>-regularization would add a term <span class="math inline">\(\beta \Vert \theta \Vert^2\)</span> to the loss function, penalizing large model weights. This generally has a smoothing effect on the output.</p>
 <p>The loss function would become <span class="math display">\[\Vert x - f_{\theta}(t) \Vert^2 + \beta \Vert \theta - 0 \Vert^2\]</span></p>
 <p>The connection to our Bayesian linear regression is obvious if we flip the sign, these are the unnormalized negative log probabilities of a Gaussian prior and likelihood. Adding regularization to our loss function turns the (frequentist) maximum likelihood estimate into a (Bayesian) maximum a posteriori estimate (MAP).</p>
 <p><span class="math display">\[\hat{\theta} = \arg\max_{\theta} \log{p(\theta | x )} = \arg\max_{\theta} \log{p(x | \theta )} + \log{p(\theta )} \\
 = \arg\min_{\theta} \Vert x - f_{\theta}(t) \Vert^2 + \beta \Vert \theta\Vert^2\]</span></p>
-<p>If you were using <span class="math inline">\(L_2\)</span>-regularization you were a Bayesian all along! Whether you call it regularization, shrinkage or a prior the effect is the same: constraining parameter values. Similarly, when you use MSE loss you’re solving the same mathematical problem as Gaussian maximum likelihood, i.e.&nbsp;under the hood you are assuming normal i.i.d errors. Probability theory just refuses to go away!</p>
+<p>If you were using <span class="math inline">\(L_2\)</span>-regularization you were a Bayesian all along! Whether you call it regularization, shrinkage or a prior the effect is the same: constraining parameter values. Similarly, when you use MSE loss you’re solving the same mathematical problem as Gaussian maximum likelihood, i.e.&nbsp;under the hood you are assuming Gaussian i.i.d errors. Probability theory just refuses to go away!</p>
 <p><span class="math inline">\(L_1\)</span>-regularization? A Laplace prior.</p>
 <p>MAE loss? Laplace likelihood.</p>
 </section>
@@ -485,7 +485,7 @@ window.Quarto = {
 <div id="cell-33" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>logprob_norm_jax <span class="op">=</span> jax.scipy.stats.norm.logpdf</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>We’ll use the arbitrary priors <span class="math inline">\(p(\theta_i) \sim N(0,100)\)</span> on the neural network parameters. The log likelihood is proportional to <span class="math inline">\(1/\sigma^2\)</span>, in this case roughly equivalent to a <span class="math inline">\(L_2\)</span>-regularization parameter <span class="math inline">\(\beta \approx\)</span> 1e-4.</p>
+<p>We’ll use the arbitrary priors <span class="math inline">\(p(\theta_i) \sim N(0,100)\)</span> on the neural network parameters. This is a very uninformative prior that will most likely cause numerical instability for more complex models and data. The prior log likelihood is proportional to <span class="math inline">\(1/\sigma^2\)</span>, in this case roughly equivalent to a <span class="math inline">\(L_2\)</span>-regularization parameter <span class="math inline">\(\beta \approx\)</span> 1e-4.</p>
 <div id="cell-35" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="at">@jax.jit</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> logprior_fn(params):</span>
@@ -547,7 +547,7 @@ window.Quarto = {
 <span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>res_oos <span class="op">=</span> jax.vmap(eval_fn, in_axes<span class="op">=</span>(<span class="dv">0</span>, <span class="va">None</span>))(posterior_params, t_oos).squeeze()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Here we’ve taken posterior samples of the neural network parameters <span class="math inline">\(\theta\)</span> and evaluated the model with them, collecting the different outputs. This yields samples of the model’s mean prediction.</p>
-<p>It is also possible to sample from the full posterior predictive distribution by also including the variance from the likelihood, but we’ll stick with the mean prediction. You can also estimate the aleatoric uncertainty, here we arbitrarily set it to <span class="math inline">\(\sigma=0.5\)</span>. If this is your goal I would recommend using a PPL.</p>
+<p>It is also possible to sample from the full posterior predictive distribution by including the variance from the likelihood, but we’ll stick with the mean prediction. You can also estimate the aleatoric uncertainty, here we arbitrarily set it to <span class="math inline">\(\sigma=0.5\)</span>. If this is your goal I would recommend using a PPL.</p>
 <div id="cell-43" class="cell" data-execution_count="25">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>df_res<span class="op">=</span>pd.DataFrame(res).T</span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>df_oos<span class="op">=</span>pd.DataFrame(res_oos).T</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>

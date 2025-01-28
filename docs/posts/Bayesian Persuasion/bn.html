@@ -204,6 +204,12 @@ window.Quarto = {
       </div>
     </div>
     
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">January 28, 2025</p>
+      </div>
+    </div>
       
     </div>
     
@@ -221,24 +227,26 @@ window.Quarto = {
 
 <section id="bayesian-persuasion" class="level1">
 <h1>Bayesian Persuasion</h1>
-<p>In this post we explore the connections between standard machine learning methods and bayesian inference. We also show how a neural network can be made fully bayesian.</p>
-<p>The first section is a refresher on bayesian stats, then we discuss the bayesian interpretation of your usual machine learning models, last we implement a bayesian neural network in jax.</p>
+<p>In this post we explore the connections between standard Machine Learning methods and Bayesian inference. We also show how to build a Bayesian neural network without relying on specialized packages.</p>
+<p>The first section is a refresher on Bayesian stats, then we discuss the Bayesian interpretation of your usual Machine Learning models, last we implement a Bayesian neural network in Jax.</p>
 <section id="back-to-bayesics" class="level2">
 <h2 class="anchored" data-anchor-id="back-to-bayesics">Back to Bayesics</h2>
-<p>A common view of machine learning is as an optimization problem over a neural network’s parameters to minimize a loss function.</p>
+<p>A common view of Machine Learning is as an optimization problem over a neural network’s parameters to minimize a loss function.</p>
 <p>For example given a NN with parameters <span class="math inline">\(\theta\)</span> we may aim to find</p>
 <p><span class="math display">\[\hat{\theta} = \arg\min_{\theta} \Vert{f_{\theta}-x}\Vert^2\]</span></p>
-<p>In case of a linear model <span class="math inline">\(f\)</span> this is the familiar setting of maximum likelihood estimation. This carries over to the general non-linear case, taking a probabilist view we are finding <span class="math inline">\(\theta\)</span> satisfying (under certain assumptions about measurement errors). <span class="math display">\[\hat{\theta} = \arg\max_{\theta} \log{p(x | \theta )}\]</span></p>
+<p>We recognize this as minimizing the mean squared error loss. Taking a probabilist view we recognize it from least squares regression, where we are finding <span class="math inline">\(\theta\)</span> satisfying (assuming Gaussian errors). <span class="math display">\[\hat{\theta} = \arg\max_{\theta} \log{p(x | \theta )}\]</span></p>
 <p>In plain text this reads “which choice of <span class="math inline">\(\theta\)</span> would make seeing this data the most likely?” Note, this does not answer the question “which <span class="math inline">\(\theta\)</span> is the most likely given the data we’ve observed?”</p>
-<p>Generally we are interested in estimating <span class="math inline">\(\theta\)</span> based on the data <span class="math inline">\(p(\theta | x)\)</span>, not the other way around. The way forward is Bayes theorem:</p>
+<p>Generally we are interested in estimating <span class="math inline">\(\theta\)</span> based on the data <span class="math inline">\(p(\theta | x)\)</span>, not the other way around. The way forward is Bayes’ theorem:</p>
 <p><span class="math display">\[p(\theta|x) = \frac{p(x|\theta)p(\theta)}{p(x)}\]</span></p>
-<p>The denominator <span class="math inline">\(p(x)\)</span> is problematic, how are we supposed to figure out the objective likelihood of the data in the real world? <span class="math inline">\(p(x)\)</span> forms a normalizing constant (w.r.t <span class="math inline">\(\theta\)</span>) ensuring <span class="math inline">\(p( \theta | x)\)</span> integrates to 1. Bayes theorem is often reformulated as</p>
+<p>The denominator <span class="math inline">\(p(x)\)</span> is problematic, how are we supposed to figure out the objective likelihood of the data in the real world? <span class="math inline">\(p(x)\)</span> forms a normalizing constant (w.r.t <span class="math inline">\(\theta\)</span>) ensuring <span class="math inline">\(p( \theta | x)\)</span> integrates to 1.</p>
+<p>Bayes’ theorem is often reformulated as</p>
 <p><span class="math display">\[p(\theta|x) \propto p(x|\theta)p(\theta)\]</span></p>
 <p>where the right hand side is an unnormalized probability.</p>
-<p>We have one other issue, what is <span class="math inline">\(p(\theta)\)</span>? If we knew the parameters we wouldn’t be solving for them! Maybe we do have some hunch about the scale and behaviour of the parameters, what if we just assign <span class="math inline">\(\theta\)</span> a probability distribution a priori? This distribution is a design choice we have to make and <span class="math inline">\(p(\theta\)</span>) is called the prior distribution of <span class="math inline">\(\theta\)</span>, prior as in prior beliefs or assumptions.</p>
-<p>Note that the improper prior <span class="math inline">\(p(\theta)=1\)</span> would make <span class="math inline">\(p(\theta|x) \propto p(x|\theta)\)</span> everywhere (and thus equal?). This is often a valid choice even though <span class="math inline">\(p(\theta)=1\)</span> is not a distribution: it doesn’t integrate to 1, it’s not even integrable. The full right hand side can be integrable though which acts as a theoretical saving grace.</p>
-<p>Let’s start by implementing our own bayesian linear regression. In the following sections we’ll work with log probabilities</p>
+<p>We have one other issue, what is <span class="math inline">\(p(\theta)\)</span>? If we knew the parameters we wouldn’t be solving for them. Maybe we do have some hunch about the scale and behaviour of the parameters, so what if we assign <span class="math inline">\(\theta\)</span> a probability distribution a priori? This distribution is a design choice we have to make and <span class="math inline">\(p(\theta\)</span>) is called the prior distribution of <span class="math inline">\(\theta\)</span>, prior as in prior beliefs or assumptions.</p>
+<p>Note that the improper prior <span class="math inline">\(p(\theta)=1\)</span> would make <span class="math inline">\(p(\theta|x) \propto p(x|\theta)\)</span> everywhere (and thus equal?).</p>
+<p>Let’s start by implementing our own Bayesian linear regression. In the following sections we’ll work with log probabilities</p>
 <p><span class="math display">\[\log{p(\theta|x)} \propto \log{p(x|\theta)} + \log{p(\theta)}\]</span></p>
+<p>Let’s generate some data <span class="math inline">\(x = \sqrt{t} + \epsilon\)</span>.</p>
 <div id="cell-7" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">123</span>)</span>
@@ -265,10 +273,9 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>We have generated data that is not inherently linear, even though the errors are i.i.d normal, let’s see how this goes.</p>
 <p>Our model will be very simple, a linear model in 1 parameter without intercept.</p>
 <p>We’ll use a <span class="math inline">\(N(0,1)\)</span> prior on the regression parameter <span class="math inline">\(\theta\)</span>, encoding an assumption that it is relatively small. It’s a weakly informative prior that doesn’t nudge the model in any particular direction. For example if we suspect <span class="math inline">\(\theta&gt;0\)</span> we could have let the choice of prior reflect this prior belief.</p>
-<p>We will also assume the likelihood <span class="math inline">\(p(x(t)| \theta) \sim N(\theta t,1)\)</span> according to our linear assumptions.</p>
+<p>We will also assume the likelihood <span class="math inline">\(p(x(t)| \theta) \sim N(\theta t,1)\)</span> according to our linear model.</p>
 <p>Next we want to define the log probabilities of <span class="math inline">\(p(x | \theta)\)</span> and <span class="math inline">\(p(\theta)\)</span>: our likelihood and prior respectively.</p>
 <div id="cell-9" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> lm(theta, t):</span>
@@ -340,7 +347,7 @@ window.Quarto = {
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>sns.lineplot(x<span class="op">=</span>t, y<span class="op">=</span>mu<span class="op">*</span>t)<span class="op">;</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>sns.lineplot(x<span class="op">=</span>t, y<span class="op">=</span>(mu<span class="op">-</span>std)<span class="op">*</span>t, color<span class="op">=</span><span class="st">'k'</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)<span class="op">;</span></span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>sns.lineplot(x<span class="op">=</span>t, y<span class="op">=</span>(mu<span class="op">+</span>std)<span class="op">*</span>t, color<span class="op">=</span><span class="st">'k'</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)<span class="op">;</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="vs">r"$\theta$ mean ± std"</span>)<span class="op">;</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="vs">r"x(t) mean ± std"</span>)<span class="op">;</span></span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"t"</span>)<span class="op">;</span></span>
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"x"</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
@@ -454,22 +461,23 @@ window.Quarto = {
 </div>
 <p>Overfitting aside we have found parameters <span class="math inline">\(\theta\)</span> of the neural network <span class="math inline">\(f_{\theta}\)</span> that minimize our loss function:</p>
 <p><span class="math display">\[\Vert x - f_{\theta}(t) \Vert^2\]</span></p>
-<p>Remember we generated the data with normal i.i.d noise, in a probabilistic setting it would thus be prudent to model the data generating distribution as</p>
+<p>Remember we generated the data with normal i.i.d noise, in a probabilistic setting it would be suitable to model the data generating distribution as</p>
 <p><span class="math display">\[ x(t) \sim N(f_{\theta}(t), \sigma)\]</span></p>
 <p>Performing a maximum likelihood fit we would maximize the log likelihood <span class="math display">\[\log {p(x(t) | \theta)} = \log{ \frac{e^{-\frac{\Vert x-f_{\theta}(t) \Vert^2}{2 \sigma^2}}}{\sqrt{2\pi \sigma^2}}} \propto C - \Vert x - f_{\theta}(t) \Vert^2\]</span></p>
-<p>Feels familiar? Maximizing the log likelihood is the same as minimizing our MSE loss function.</p>
+<p>Maximizing the Gaussian log likelihood is the same as minimizing our MSE loss function.</p>
 <p>One possible remedy for overfitting is regularization of the neural network parameters, for example <span class="math inline">\(L_2\)</span>-regularization would add a term <span class="math inline">\(\beta \Vert \theta \Vert^2\)</span> to the loss function, thereby penalizing large weights. This generally has a smoothing effect on the output.</p>
 <p>The loss function would become <span class="math display">\[\Vert x - f_{\theta}(t) \Vert^2 + \beta \Vert \theta - 0 \Vert^2\]</span></p>
-<p>The connection to our bayesian linear regression is obvious if we flip the sign, these are the unnormalized negative log probabilities of normal priors and likelihoods. Adding regularization to our loss function turns the (frequentist) maximum likelihood estimate into a (bayesian) maximum a posteriori estimate (MAP).</p>
-<p><span class="math display">\[\hat{\theta} = \arg\max_{\theta} \log{p(\theta | x )} = \arg\max_{\theta} \log{p(x | \theta )} + \log{p(\theta )} = \arg\min_{\theta} \Vert x - f_{\theta}(t) \Vert^2 + \beta \Vert \theta\Vert^2\]</span></p>
-<p>If you were using <span class="math inline">\(L_2\)</span>-regularization you were a bayesian all along! Whether you call it regularization, shrinkage or a prior the effect is the same: constraining parameter values. Similarly, when you use MSE loss you’re applying a filter on the data, assuming normal i.i.d errors. Probability theory just refuses to go away!</p>
+<p>The connection to our Bayesian linear regression is obvious if we flip the sign, these are the unnormalized negative log probabilities of a Gaussian prior and likelihood. Adding regularization to our loss function turns the (frequentist) maximum likelihood estimate into a (Bayesian) maximum a posteriori estimate (MAP).</p>
+<p><span class="math display">\[\hat{\theta} = \arg\max_{\theta} \log{p(\theta | x )} = \arg\max_{\theta} \log{p(x | \theta )} + \log{p(\theta )} \\
+= \arg\min_{\theta} \Vert x - f_{\theta}(t) \Vert^2 + \beta \Vert \theta\Vert^2\]</span></p>
+<p>If you were using <span class="math inline">\(L_2\)</span>-regularization you were a Bayesian all along! Whether you call it regularization, shrinkage or a prior the effect is the same: constraining parameter values. Similarly, when you use MSE loss you’re solving the same mathematical problem as Gaussian maximum likelihood, i.e.&nbsp;under the hood you are assuming normal i.i.d errors. Probability theory just refuses to go away!</p>
 <p><span class="math inline">\(L_1\)</span>-regularization? A Laplace prior.</p>
 <p>MAE loss? Laplace likelihood.</p>
 </section>
 <section id="bayesian-neural-network" class="level2">
 <h2 class="anchored" data-anchor-id="bayesian-neural-network">Bayesian Neural Network</h2>
-<p>We learned that the standard neural network has a bayesian interpretation, but something is missing. We didn’t manage to sample from our posterior <span class="math inline">\(p(\theta | x)\)</span>, we just found a point estimate of <span class="math inline">\(\theta\)</span>. In order to be fully bayesian we’d like to average over this posterior distribution when predicting new values.</p>
-<p>Drawing samples from the posterior is a difficult problem in general, the standard way is to sample using MCMC (typically HMC) or SVI. These samplers can be found in a variety of packages and part of excellent PPLs like Numpyro, PYMC and Turing.jl. Here we will try out the Blackjax package and its SVI algorithm <strong>pathfinder</strong>.</p>
+<p>We learned that the standard neural network has a Bayesian interpretation, but something is missing. We didn’t manage to sample from our posterior <span class="math inline">\(p(\theta | x)\)</span>, we just found a point estimate of <span class="math inline">\(\theta\)</span>. In order to be fully Bayesian we’d like to average over this posterior distribution when predicting new values.</p>
+<p>Drawing samples from the posterior is a difficult problem in general, the standard way is to sample using MCMC (typically HMC) or SVI. These samplers can be found in a variety of packages and part of excellent PPLs like Numpyro, PYMC and Turing.jl. Here we will try out a NUTS sampler from the Blackjax package.</p>
 <div id="cell-32" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>data<span class="op">=</span>(jnp.expand_dims(t,<span class="op">-</span><span class="dv">1</span>), jnp.expand_dims(x,<span class="op">-</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -495,139 +503,96 @@ window.Quarto = {
 </div>
 <div id="cell-36" class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> blackjax</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>num_warmup <span class="op">=</span> <span class="dv">10000</span></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>num_samples <span class="op">=</span> <span class="dv">1000</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>rng_key <span class="op">=</span> PRNGKey(<span class="dv">0</span>)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>rng_key, rng_subkey <span class="op">=</span> jax.random.split(rng_key)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>num_warmup <span class="op">=</span> <span class="dv">100000</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>num_samples <span class="op">=</span> <span class="dv">5000</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="cell-37" class="cell" data-execution_count="20">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>rng_key <span class="op">=</span> PRNGKey(<span class="dv">0</span>)</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>rng_key, rng_subkey <span class="op">=</span> jax.random.split(rng_key)</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> NN(act<span class="op">=</span>nnx.sigmoid ,key<span class="op">=</span>rng_key)</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>state <span class="op">=</span> nnx.state(model)</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>param <span class="op">=</span> state.<span class="bu">filter</span>(nnx.Param)</span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>pathfinder_state, infos <span class="op">=</span> blackjax.vi.pathfinder.approximate(</span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    rng_key<span class="op">=</span>rng_subkey,</span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>    logdensity_fn<span class="op">=</span>logdensity_fn,</span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>    initial_position<span class="op">=</span>param,</span>
-<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>    num_samples<span class="op">=</span>num_warmup,</span>
-<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>    ftol<span class="op">=</span><span class="fl">1e-12</span>,</span>
-<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>    gtol<span class="op">=</span><span class="fl">1e-12</span>,</span>
-<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>    maxiter<span class="op">=</span><span class="dv">50</span>,</span>
-<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>    maxls<span class="op">=</span><span class="dv">10000</span></span>
-<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a><span class="co"># sample from the posterior</span></span>
-<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>rng_key, rng_subkey <span class="op">=</span> jax.random.split(rng_key)</span>
-<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>posterior_samples, _ <span class="op">=</span> blackjax.vi.pathfinder.sample(</span>
-<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>    rng_key<span class="op">=</span>rng_subkey,</span>
-<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a>    state<span class="op">=</span>pathfinder_state,</span>
-<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a>    num_samples<span class="op">=</span>num_samples,</span>
-<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> NN(act<span class="op">=</span>nnx.sigmoid ,key<span class="op">=</span>rng_key)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>state <span class="op">=</span> nnx.state(model)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>param <span class="op">=</span> state.<span class="bu">filter</span>(nnx.Param)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="cell-38" class="cell" data-execution_count="21">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>infos.path.elbo</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="21">
-<pre><code>Array([-2.8448083e+08,           -inf,           -inf,           -inf,
-                 -inf,           -inf,           -inf,           -inf,
-                 -inf,           -inf,           -inf,           -inf,
-                 -inf,           -inf,           -inf,           -inf,
-                 -inf,           -inf,           -inf,           -inf,
-                 -inf, -1.7234183e+02,           -inf, -1.7494684e+02,
-       -1.6947232e+02, -1.8210046e+02,           -inf,           -inf,
-       -1.7699753e+02,           -inf,           -inf,           -inf,
-                 -inf,           -inf,           -inf, -1.7910097e+02,
-                 -inf,           -inf, -1.8681752e+02, -2.9257407e+02,
-                 -inf, -1.8813480e+02,           -inf,           -inf,
-       -2.0863950e+02,           -inf, -1.9126106e+02, -1.8669675e+02,
-                 -inf,           -inf,           -inf], dtype=float32)</code></pre>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>adapt <span class="op">=</span> blackjax.window_adaptation(</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    blackjax.nuts, logdensity_fn, target_acceptance_rate<span class="op">=</span><span class="fl">0.8</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>rng_key, warmup_key <span class="op">=</span> jax.random.split(rng_key)</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="co"># warm up the model in order to reach equilibrium</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>(last_state, parameters), _ <span class="op">=</span> adapt.run(warmup_key, param, num_warmup)</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>kernel <span class="op">=</span> blackjax.nuts(logdensity_fn, <span class="op">**</span>parameters).step</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<div id="cell-39" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>keys <span class="op">=</span> jax.random.split(rng_key, num_samples)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> step_fn(key, state):</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> kernel(key, state)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="co"># sample</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>s, info <span class="op">=</span> jax.vmap(step_fn,in_axes<span class="op">=</span>(<span class="dv">0</span>, <span class="va">None</span>))(keys, last_state)</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>posterior_params <span class="op">=</span> s.position</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Ouch! This did not converge well, maybe this algorithm isn’t suitable for our use case, maybe the geometry of the posterior is difficult? There are plenty of other samplers to try for those so inclined.</p>
-<p>Let’s fall back on NUTS, a HMC MCMC sampler.</p>
-<div id="cell-40" class="cell" data-execution_count="22">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> NN(act<span class="op">=</span>nnx.sigmoid ,key<span class="op">=</span>rng_key)</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>state <span class="op">=</span> nnx.state(model)</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>param <span class="op">=</span> state.<span class="bu">filter</span>(nnx.Param)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-40" class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> eval_fn(params, t):</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> model.<span class="bu">apply</span>(params, jnp.expand_dims(t,<span class="op">-</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-41" class="cell" data-execution_count="23">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>adapt <span class="op">=</span> blackjax.window_adaptation(</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    blackjax.nuts, logdensity_fn, target_acceptance_rate<span class="op">=</span><span class="fl">0.8</span></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>rng_key, warmup_key <span class="op">=</span> jax.random.split(rng_key)</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="co"># warm up the model in order to reach equilibrium</span></span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>(last_state, parameters), _ <span class="op">=</span> adapt.run(warmup_key, param, num_warmup)</span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>kernel <span class="op">=</span> blackjax.nuts(logdensity_fn, <span class="op">**</span>parameters).step</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cell-41" class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># apply model with weights sampled from the posterior distribution, e.g. draw x from the posterior predictive</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>res <span class="op">=</span> jax.vmap(eval_fn, in_axes<span class="op">=</span>(<span class="dv">0</span>, <span class="va">None</span>))(posterior_params, t).squeeze()</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="co"># predict out of sample</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>t_oos<span class="op">=</span>jnp.arange(<span class="dv">0</span>,<span class="dv">20</span>,<span class="fl">.1</span>)</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>res_oos <span class="op">=</span> jax.vmap(eval_fn, in_axes<span class="op">=</span>(<span class="dv">0</span>, <span class="va">None</span>))(posterior_params, t_oos).squeeze()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-42" class="cell" data-execution_count="24">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>keys <span class="op">=</span> jax.random.split(rng_key, num_samples)</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> step_fn(key, state):</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> kernel(key, state)</span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="co"># sample</span></span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>s, info <span class="op">=</span> jax.vmap(step_fn,in_axes<span class="op">=</span>(<span class="dv">0</span>, <span class="va">None</span>))(keys, last_state)</span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>posterior_params <span class="op">=</span> s.position</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
+<p>Here we’ve taken posterior samples of the neural network parameters <span class="math inline">\(\theta\)</span> and evaluated the model with them, collecting the different outputs. What we get is an estimate of the model’s mean.</p>
+<p>It is also possible to sample from the full posterior predictive distribution by also including the variance from the likelihood, but we’ll stick with the mean prediction.</p>
+<p>You can also estimate the likelihood variance, here we arbitrarily set it to <span class="math inline">\(0.5\)</span>. If this is your goal I would recommend using a PPL.</p>
 <div id="cell-43" class="cell" data-execution_count="25">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> eval_fn(params, t):</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> model.<span class="bu">apply</span>(params, jnp.expand_dims(t,<span class="op">-</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>df_res<span class="op">=</span>pd.DataFrame(res).T</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>df_oos<span class="op">=</span>pd.DataFrame(res_oos).T</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="cell-44" class="cell" data-execution_count="26">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># apply model with weights sampled from the posterior distribution, e.g. draw x from the posterior predictive</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>res <span class="op">=</span> jax.vmap(eval_fn, in_axes<span class="op">=</span>(<span class="dv">0</span>, <span class="va">None</span>))(posterior_params, t).squeeze()</span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="co"># predict out of sample</span></span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>t_oos<span class="op">=</span>jnp.arange(<span class="dv">0</span>,<span class="dv">20</span>,<span class="fl">.1</span>)</span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>res_oos <span class="op">=</span> jax.vmap(eval_fn, in_axes<span class="op">=</span>(<span class="dv">0</span>, <span class="va">None</span>))(posterior_params, t_oos).squeeze()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>means<span class="op">=</span>df_res.mean(axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>stds <span class="op">=</span> df_res.std(axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(x <span class="op">=</span> t, y <span class="op">=</span> x)<span class="op">;</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>sns.lineplot(x <span class="op">=</span> t, y <span class="op">=</span> means)</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>sns.lineplot(x <span class="op">=</span> t, y <span class="op">=</span> means <span class="op">+</span> stds, color<span class="op">=</span><span class="st">"k"</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)<span class="op">;</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>sns.lineplot(x <span class="op">=</span> t, y <span class="op">=</span> means <span class="op">-</span> stds, color<span class="op">=</span><span class="st">"k"</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)<span class="op">;</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="vs">r"BNN mean ± std"</span>)<span class="op">;</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"t"</span>)<span class="op">;</span></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="vs">r"$f_{\theta}(t)$"</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="bn_files/figure-html/cell-27-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
 </div>
 <div id="cell-45" class="cell" data-execution_count="27">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>df_res<span class="op">=</span>pd.DataFrame(res).T</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>df_oos<span class="op">=</span>pd.DataFrame(res_oos).T</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div id="cell-46" class="cell" data-execution_count="28">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>means<span class="op">=</span>df_res.mean(axis<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>stds <span class="op">=</span> df_res.std(axis<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(x <span class="op">=</span> t, y <span class="op">=</span> x)<span class="op">;</span></span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>sns.lineplot(x <span class="op">=</span> t, y <span class="op">=</span> means)</span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>sns.lineplot(x <span class="op">=</span> t, y <span class="op">=</span> means <span class="op">+</span> stds, color<span class="op">=</span><span class="st">"k"</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)<span class="op">;</span></span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>sns.lineplot(x <span class="op">=</span> t, y <span class="op">=</span> means <span class="op">-</span> stds, color<span class="op">=</span><span class="st">"k"</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)<span class="op">;</span></span>
-<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="vs">r"BNN mean ± std"</span>)<span class="op">;</span></span>
-<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"t"</span>)<span class="op">;</span></span>
-<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="vs">r"$f_{\theta}(t)$"</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>means<span class="op">=</span>df_oos.mean(axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>stds <span class="op">=</span> df_oos.std(axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>sns.lineplot(x<span class="op">=</span>t_oos, y<span class="op">=</span>means)<span class="op">;</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>sns.lineplot(x<span class="op">=</span>t_oos, y<span class="op">=</span>np.sqrt(t_oos), alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>sns.lineplot(x<span class="op">=</span>t_oos, y<span class="op">=</span>means <span class="op">+</span> stds, color<span class="op">=</span><span class="st">"k"</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)<span class="op">;</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>sns.lineplot(x<span class="op">=</span>t_oos, y<span class="op">=</span>means <span class="op">-</span> stds, color<span class="op">=</span><span class="st">"k"</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)<span class="op">;</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(x<span class="op">=</span>t, y<span class="op">=</span>x)<span class="op">;</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="vs">r"BNN mean ± std out of sample"</span>)<span class="op">;</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"t"</span>)<span class="op">;</span></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="vs">r"$f_{\theta}(t)$"</span>)<span class="op">;</span></span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>plt.legend([<span class="st">"BNN mean"</span>, <span class="st">"Truth"</span>, <span class="vs">r"$\sigma$ credible intervals"</span>])<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="bn_files/figure-html/cell-29-output-1.png" class="img-fluid figure-img"></p>
+<p><img src="bn_files/figure-html/cell-28-output-1.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 </div>
 </div>
-<div id="cell-47" class="cell" data-execution_count="33">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>means<span class="op">=</span>df_oos.mean(axis<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>stds <span class="op">=</span> df_oos.std(axis<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>sns.lineplot(x<span class="op">=</span>t_oos, y<span class="op">=</span>means)<span class="op">;</span></span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>sns.lineplot(x<span class="op">=</span>t_oos, y<span class="op">=</span>np.sqrt(t_oos), alpha<span class="op">=</span><span class="fl">0.3</span>)</span>
-<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>sns.lineplot(x<span class="op">=</span>t_oos, y<span class="op">=</span>means <span class="op">+</span> stds, color<span class="op">=</span><span class="st">"k"</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)<span class="op">;</span></span>
-<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>sns.lineplot(x<span class="op">=</span>t_oos, y<span class="op">=</span>means <span class="op">-</span> stds, color<span class="op">=</span><span class="st">"k"</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)<span class="op">;</span></span>
-<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(x<span class="op">=</span>t, y<span class="op">=</span>x)<span class="op">;</span></span>
-<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="vs">r"BNN mean ± std out of sample"</span>)<span class="op">;</span></span>
-<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"t"</span>)<span class="op">;</span></span>
-<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="vs">r"$f_{\theta}(t)$"</span>)<span class="op">;</span></span>
-<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>plt.legend([<span class="st">"BNN mean"</span>, <span class="st">"Truth"</span>, <span class="vs">r"$\sigma$ credibility intervals"</span>])<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="bn_files/figure-html/cell-30-output-1.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>When using a BNN our predictions are samples drawn from the posterior predictive distribution, this has the benefit of informing us about the model’s uncertainty. We see that the standard deviation grows when we try to extrapolate. Maybe someday LLMs will have this feature instead of confidently recommending eating rocks.</p>
+<p>When using a BNN our predictions are samples drawn from the posterior predictive distribution, this has the benefit of informing us about the model’s uncertainty (about the model parameters in this case). In-sample the model fits the data quite well with no obvious overfitting. We see that the standard deviation grows when we try to extrapolate. Maybe someday LLMs will have this feature instead of confidently recommending eating rocks.</p>
 <p><img src="GPT_rocks.jpeg" class="img-fluid"></p>
 
 

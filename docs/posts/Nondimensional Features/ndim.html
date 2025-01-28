@@ -259,7 +259,7 @@ T&amp;: -1 = -2 \gamma
 <section id="airfoil-example" class="level3">
 <h3 class="anchored" data-anchor-id="airfoil-example">Airfoil Example</h3>
 <p>Let’s try try it out on a dataset from NASA on airfoils in a wind tunnel experiment.</p>
-<div id="cell-11" class="cell" data-execution_count="947">
+<div id="cell-11" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> ucimlrepo <span class="im">import</span> fetch_ucirepo</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -273,14 +273,14 @@ T&amp;: -1 = -2 \gamma
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-12" class="cell" data-execution_count="950">
+<div id="cell-12" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>airfoil_self_noise <span class="op">=</span> fetch_ucirepo(<span class="bu">id</span><span class="op">=</span><span class="dv">291</span>) </span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> airfoil_self_noise.data</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> data.features </span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> data.targets[<span class="st">"scaled-sound-pressure"</span>]</span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>airfoil_self_noise.metadata</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="950">
+<div class="cell-output cell-output-display" data-execution_count="2">
 <pre><code>{'uci_id': 291,
  'name': 'Airfoil Self-Noise',
  'repository_url': 'https://archive.ics.uci.edu/dataset/291/airfoil+self+noise',
@@ -313,9 +313,9 @@ T&amp;: -1 = -2 \gamma
   'citation': None}}</code></pre>
 </div>
 </div>
-<div id="cell-13" class="cell" data-execution_count="218">
+<div id="cell-13" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>airfoil_self_noise.variables</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="218">
+<div class="cell-output cell-output-display" data-execution_count="3">
 <div>
 
 
@@ -399,7 +399,7 @@ T&amp;: -1 = -2 \gamma
 </div>
 </div>
 </div>
-<div id="cell-14" class="cell" data-execution_count="219">
+<div id="cell-14" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>X.join(y).hist(bins<span class="op">=</span><span class="dv">30</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
@@ -409,7 +409,7 @@ T&amp;: -1 = -2 \gamma
 </div>
 </div>
 </div>
-<div id="cell-15" class="cell" data-execution_count="221">
+<div id="cell-15" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>pd.plotting.scatter_matrix(X.join(y))<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
@@ -419,7 +419,7 @@ T&amp;: -1 = -2 \gamma
 </div>
 </div>
 </div>
-<div id="cell-16" class="cell" data-execution_count="814">
+<div id="cell-16" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(x<span class="op">=</span>X[<span class="st">"frequency"</span>], y<span class="op">=</span>y)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
@@ -430,7 +430,7 @@ T&amp;: -1 = -2 \gamma
 </div>
 </div>
 <p>To showcase the extrapolation capabilities of non-dimensional features, let’s reserve the largest frequencies as a test set.</p>
-<div id="cell-18" class="cell" data-execution_count="2026">
+<div id="cell-18" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>test_inds <span class="op">=</span> X[<span class="st">"frequency"</span>] <span class="op">&gt;</span> <span class="dv">2000</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>X_test <span class="op">=</span> X.loc[test_inds,:]</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>y_test <span class="op">=</span> y.loc[test_inds]</span>
@@ -441,7 +441,7 @@ T&amp;: -1 = -2 \gamma
 <pre><code>Train size: 872, test_size: 631</code></pre>
 </div>
 </div>
-<div id="cell-19" class="cell" data-execution_count="2027">
+<div id="cell-19" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>sns.histplot(y_train, bins<span class="op">=</span><span class="dv">30</span>, stat<span class="op">=</span><span class="st">"probability"</span>)</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>sns.histplot(y_test, bins<span class="op">=</span><span class="dv">30</span>, stat<span class="op">=</span><span class="st">"probability"</span>, alpha<span class="op">=</span> <span class="fl">0.3</span>, color<span class="op">=</span><span class="st">"orange"</span>)</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>plt.legend([<span class="st">"y_train"</span>, <span class="st">"y_test"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -544,26 +544,26 @@ L&amp;: 0 = \beta + \gamma + \delta
 <blockquote class="blockquote">
 <p>Note that <span class="math inline">\(\Pi_0\)</span>, <span class="math inline">\(\Pi_1\)</span> are symmetrical of the form <span class="math inline">\(\frac{fL}{v}\)</span>, this is called the Strouhal Number and is used in fluid dynamics to describe vortex shedding and related phenomena. A physicist would probably choose a dimensionless group consisting of the Strouhal number using the airfoil thickness d and some other number that involves the length l, for example the Reynolds number. But this is a machine learning article so we’ll pretend we didn’t see that.</p>
 </blockquote>
-<div id="cell-28" class="cell" data-execution_count="2028">
+<div id="cell-28" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> nondim_trans(X, delta_basis<span class="op">=</span>(<span class="dv">0</span>,<span class="dv">1</span>)):</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    d_0, d_1 <span class="op">=</span> delta_basis</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    pi_0 <span class="op">=</span> X[<span class="st">"frequency"</span>]<span class="op">**</span><span class="dv">1</span> <span class="op">*</span> X[<span class="st">"chord-length"</span>]<span class="op">**</span>(<span class="dv">1</span><span class="op">-</span>d_0) <span class="op">*</span> X[<span class="st">"free-stream-velocity"</span>]<span class="op">**-</span><span class="dv">1</span> <span class="op">*</span> X[<span class="st">"suction-side-displacement-thickness"</span>]<span class="op">**</span>d_0</span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    pi_1 <span class="op">=</span> X[<span class="st">"frequency"</span>]<span class="op">**</span><span class="dv">1</span> <span class="op">*</span> X[<span class="st">"chord-length"</span>]<span class="op">**</span>(<span class="dv">1</span><span class="op">-</span>d_1) <span class="op">*</span> X[<span class="st">"free-stream-velocity"</span>]<span class="op">**-</span><span class="dv">1</span> <span class="op">*</span> X[<span class="st">"suction-side-displacement-thickness"</span>]<span class="op">**</span>d_1</span>
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> pd.DataFrame(data<span class="op">=</span>np.vstack([pi_0, pi_1]).T, columns<span class="op">=</span>[<span class="st">"pi_0"</span>, <span class="st">"pi_1"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-29" class="cell" data-execution_count="2029">
+<div id="cell-29" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>X_train_trans <span class="op">=</span> nondim_trans(X_train)</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>X_test_trans <span class="op">=</span> nondim_trans(X_test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><span class="math inline">\(\Pi\)</span> varies by several orders of magnitude, so let’s work with the logarithm from now on.</p>
-<div id="cell-31" class="cell" data-execution_count="2030">
+<div id="cell-31" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>X_train_trans <span class="op">=</span> X_train_trans.<span class="bu">apply</span>(np.log)</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>X_train_trans[<span class="st">"attack-angle"</span>]  <span class="op">=</span> X_train[<span class="st">"attack-angle"</span>].values</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>X_test_trans <span class="op">=</span> X_test_trans.<span class="bu">apply</span>(np.log)</span>
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>X_test_trans[<span class="st">"attack-angle"</span>]  <span class="op">=</span> X_test[<span class="st">"attack-angle"</span>].values</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-32" class="cell" data-execution_count="2031">
+<div id="cell-32" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>pd.plotting.scatter_matrix(X_train_trans.join(y_train))<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
@@ -573,36 +573,36 @@ L&amp;: 0 = \beta + \gamma + \delta
 </div>
 </div>
 </div>
-<div id="cell-33" class="cell" data-execution_count="2032">
+<div id="cell-33" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> RandomForestRegressor</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> root_mean_squared_error</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-34" class="cell" data-execution_count="2062">
+<div id="cell-34" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>model_trans <span class="op">=</span> RandomForestRegressor(max_depth<span class="op">=</span><span class="dv">4</span>, n_estimators<span class="op">=</span><span class="dv">100</span>)</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>model_orig <span class="op">=</span> RandomForestRegressor(max_depth<span class="op">=</span><span class="dv">4</span>, n_estimators<span class="op">=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-35" class="cell" data-execution_count="2063">
+<div id="cell-35" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>model_trans.fit(X_train_trans, y_train)<span class="op">;</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>model_orig.fit(X_train, y_train)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-36" class="cell" data-execution_count="2064">
+<div id="cell-36" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>yh_trans <span class="op">=</span> model_trans.predict(X_test_trans)</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>yh_orig  <span class="op">=</span> model_orig.predict(X_test)</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>yh_trans_tr <span class="op">=</span> model_trans.predict(X_train_trans)</span>
 <span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>yh_orig_tr  <span class="op">=</span> model_orig.predict(X_train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-37" class="cell" data-execution_count="2065">
+<div id="cell-37" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>rmse_trans_test<span class="op">=</span>root_mean_squared_error(yh_trans, y_test)</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>rmse_orig_test<span class="op">=</span>root_mean_squared_error(yh_orig, y_test)</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>rmse_trans_train<span class="op">=</span>root_mean_squared_error(yh_trans_tr, y_train)</span>
 <span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>rmse_orig_train<span class="op">=</span>root_mean_squared_error(yh_orig_tr, y_train)</span>
 <span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"RMSE: train nondim </span><span class="sc">{</span>rmse_trans_train<span class="sc">:.2f}</span><span class="ss">, train orig </span><span class="sc">{</span>rmse_orig_train<span class="sc">:.2f}</span><span class="ss">, test nondim </span><span class="sc">{</span>rmse_trans_test<span class="sc">:.2f}</span><span class="ss">, test orig </span><span class="sc">{</span>rmse_orig_test<span class="sc">:.2f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>RMSE: train nondim 3.50, train orig 3.60, test nondim 4.70, test orig 8.46</code></pre>
+<pre><code>RMSE: train nondim 3.50, train orig 3.62, test nondim 4.65, test orig 8.48</code></pre>
 </div>
 </div>
-<div id="cell-38" class="cell" data-execution_count="2069">
+<div id="cell-38" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, sharex<span class="op">=</span> <span class="va">True</span>, sharey<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(x<span class="op">=</span>y_test, y<span class="op">=</span>yh_trans, hue <span class="op">=</span> X_test[<span class="st">"frequency"</span>], ax<span class="op">=</span>axes[<span class="dv">0</span>], palette <span class="op">=</span> <span class="st">"coolwarm"</span>)<span class="op">;</span></span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(x<span class="op">=</span>y_test, y<span class="op">=</span>yh_orig, hue <span class="op">=</span> X_test[<span class="st">"frequency"</span>], ax<span class="op">=</span>axes[<span class="dv">1</span>], palette <span class="op">=</span> <span class="st">"coolwarm"</span>)<span class="op">;</span></span>

@@ -360,7 +360,8 @@ window.Quarto = {
 </div>
 <p>We have successfully sampled from the posterior distribution <span class="math inline">\(p(\theta|x)\)</span> and found that <span class="math inline">\(\theta \approx 0.38\)</span> with quite some certainty.</p>
 <p>What about the predicted values <span class="math inline">\(\tilde{x}(t)\)</span> given this model? This is also probabilistic given the posterior distribution of <span class="math inline">\(\theta\)</span>. These values are distributed according to the posterior predictive distribution <span class="math display">\[p(\tilde{x}(t)|x) = \int p(\tilde{x}(t)|\theta ) p(\theta|x(t)) d\theta\]</span></p>
-<p>We’re essentially looking for the probability of a new <span class="math inline">\(\tilde{x}\)</span> given all our data x by averaging over <span class="math inline">\(\theta\)</span> from the posterior.</p>
+<p>This involves sampling <span class="math inline">\(p(\tilde{x}(t)| \theta) \sim N(\mu_x = \theta t, \sigma_x = 1)\)</span>, but in the following sections we’ll drop the aleatoric uncertainty <span class="math inline">\(\sigma_x\)</span> and only consider the epistemic uncertainty in the model parameters.</p>
+<p>We’re essentially looking for the probability of the mean of <span class="math inline">\(\tilde{x}\)</span> given all our data x by averaging over <span class="math inline">\(\theta\)</span> from the posterior.</p>
 <p>For example <span class="math inline">\(\tilde{x}|t=4\)</span></p>
 <div id="cell-16" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>posterior_predictive_samples<span class="op">=</span>[lm(theta, <span class="dv">4</span>) <span class="cf">for</span> theta <span class="kw">in</span> posterior_samples]</span>
@@ -545,9 +546,8 @@ window.Quarto = {
 <span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>t_oos<span class="op">=</span>jnp.arange(<span class="dv">0</span>,<span class="dv">20</span>,<span class="fl">.1</span>)</span>
 <span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>res_oos <span class="op">=</span> jax.vmap(eval_fn, in_axes<span class="op">=</span>(<span class="dv">0</span>, <span class="va">None</span>))(posterior_params, t_oos).squeeze()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Here we’ve taken posterior samples of the neural network parameters <span class="math inline">\(\theta\)</span> and evaluated the model with them, collecting the different outputs. What we get is an estimate of the model’s mean.</p>
-<p>It is also possible to sample from the full posterior predictive distribution by also including the variance from the likelihood, but we’ll stick with the mean prediction.</p>
-<p>You can also estimate the likelihood variance, here we arbitrarily set it to <span class="math inline">\(0.5\)</span>. If this is your goal I would recommend using a PPL.</p>
+<p>Here we’ve taken posterior samples of the neural network parameters <span class="math inline">\(\theta\)</span> and evaluated the model with them, collecting the different outputs. This yields samples of the model’s mean prediction.</p>
+<p>It is also possible to sample from the full posterior predictive distribution by also including the variance from the likelihood, but we’ll stick with the mean prediction. You can also estimate the aleatoric uncertainty, here we arbitrarily set it to <span class="math inline">\(\sigma=0.5\)</span>. If this is your goal I would recommend using a PPL.</p>
 <div id="cell-43" class="cell" data-execution_count="25">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>df_res<span class="op">=</span>pd.DataFrame(res).T</span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>df_oos<span class="op">=</span>pd.DataFrame(res_oos).T</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>

@@ -9,7 +9,7 @@
 <meta name="author" content="lta">
 <meta name="dcterms.date" content="2025-01-28">
 
-<title>Nondimensional Features – Random Projections</title>
+<title>Dimensionless Features – Random Projections</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -181,7 +181,7 @@ window.Quarto = {
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Nondimensional Features</h1>
+      <h1 class="title">Dimensionless Features</h1>
                                 <div class="quarto-categories">
                 <div class="quarto-category">Machine Learning</div>
                 <div class="quarto-category">Physics</div>
@@ -221,18 +221,18 @@ window.Quarto = {
 
 
 
-<section id="nondimensional-features" class="level1">
-<h1>Nondimensional Features</h1>
+<section id="dimensionless-features" class="level1">
+<h1>Dimensionless Features</h1>
 <section id="dimensional-analysis" class="level2">
 <h2 class="anchored" data-anchor-id="dimensional-analysis">Dimensional Analysis</h2>
 <p>When dealing with machine learning problems for physical systems the quantities we use as features and targets have <em>dimensionality</em>.</p>
 <p>For example consider a simple pendulum of length l <span class="math inline">\([L]\)</span>, mass m <span class="math inline">\([M]\)</span>, gravitational (acceleration) constant g <span class="math inline">\([L T^{-2}]\)</span>, where we want to learn the frequency f <span class="math inline">\([T^{-1}]\)</span>.</p>
 <p><img src="pendulumswing.jpg" width="320" style="display=block; margin-left:auto; margin-right:auto"></p>
-<p>We could feed these features as-is to a machine learning model that might do very well on lab generated data, but would it be able to generalize to let’s say a pendulum the size of a carinval ride or a pendulum on the moon?</p>
+<p>We could feed these features as-is to a machine learning model that might do very well on lab generated data, but would it be able to generalize to let’s say a pendulum the size of a carnival ride or a pendulum on the moon?</p>
 <p>In order to help the model we could try to incorporate some physics knowledge. The basic idea of dimensional analysis is that for any equation the dimensions must match on the left- and right hand sides.</p>
 <p>By ansatz:</p>
 <p><span class="math inline">\(f = \phi(l, m, g) = k l^{\alpha} m^{\beta} g^{\gamma}\)</span></p>
-<p>Since the dimensionalities must match we can apply these exponents to the dimensions:</p>
+<p>We then apply these exponents to the dimensions themselves:</p>
 <p><span class="math inline">\(T^{-1} = k L^{\alpha} M^{\beta} (L T^{-2})^{\gamma} = k L^{\alpha + \gamma} M^{\beta} T^{-2\gamma}\)</span></p>
 <p><span class="math inline">\(\left\{
 \begin{aligned}
@@ -243,18 +243,18 @@ T&amp;: -1 = -2 \gamma
 <p>This immediately yields <span class="math inline">\(\gamma = \frac{1}{2}, \beta = 0, \alpha = -\frac{1}{2}.\)</span></p>
 <p>We have found the equation for the frequency of the simple pendulum without any force balancing, vector algebra, trigonometry etc.</p>
 <p><span class="math inline">\(f = k \sqrt{\frac{g}{l}}\)</span></p>
-<p>This means that the frequency can be predicted by <span class="math inline">\(\sqrt{\frac{g}{l}}\)</span> alone, and using this as a feature we would only have to make the model learn a function <span class="math inline">\(\phi(\sqrt{\frac{g}{l}})\)</span>, or in the linear regime, the constant k. This holds for all ranges of lengths and gravities.</p>
-<p>You may have noticed the logical leap when deriving the dependence on <span class="math inline">\(\sqrt{\frac{g}{l}}\)</span> from the linear model, and claiming this also applies in the general nonlinear case, i.e.&nbsp;<span class="math inline">\(\phi\)</span> is <em>only</em> a funtion of <span class="math inline">\(\sqrt{\frac{g}{l}}\)</span>. To really show this we need the <a href="https://ocw.mit.edu/courses/2-25-advanced-fluid-mechanics-fall-2013/c0a4521f55e9191d557c167e99e97469_MIT2_25F13_The_Buckingham.pdf">Buckingham <span class="math inline">\(\pi\)</span> theorem</a>.</p>
-<p>In short this tells us that <em>any physical system</em> described as a function of variables <span class="math inline">\(q_0,...q_i\)</span> can also be described as a function of a dimensionless group of variables <span class="math inline">\(\Pi_0,...\Pi_j\)</span> where j ≤ i.</p>
-<p>For the pendulum we only need one dimensionless variable <span class="math inline">\(\Pi_0 = f\sqrt{\frac{l}{g}}.\)</span> and its behaviour is described by some functional <span class="math inline">\(F(\Pi_0) = 0\)</span>.</p>
+<p>This means that the frequency can be predicted by <span class="math inline">\(\sqrt{\frac{g}{l}}\)</span> alone in the linear regime and we would only have to learn the constant <span class="math inline">\(k\)</span>. This holds for all ranges of lengths and gravities.</p>
+<p>The fact that <span class="math inline">\(\phi\)</span> is a function of <span class="math inline">\(\sqrt{\frac{g}{l}}\)</span> also holds in the nonlinear case, to show this we need the <a href="https://ocw.mit.edu/courses/2-25-advanced-fluid-mechanics-fall-2013/c0a4521f55e9191d557c167e99e97469_MIT2_25F13_The_Buckingham.pdf">Buckingham <span class="math inline">\(\pi\)</span> theorem</a>.</p>
+<p>In short this tells us that <em>any physical system</em> described as a function of variables <span class="math inline">\(q_0,...q_i\)</span> can also be described as a function of a dimensionless group of variables <span class="math inline">\(\Pi_0,...\Pi_j\)</span> where <span class="math inline">\(j ≤ i\)</span>.</p>
+<p>For the pendulum we only need <span class="math inline">\(\Pi_0 = f\sqrt{\frac{l}{g}}.\)</span> and the starting angle <span class="math inline">\(\Pi_1 = \theta_0\)</span>, its behaviour is described by some functional <span class="math inline">\(F(\Pi_0,\theta_0) = 0\)</span>.</p>
 </section>
 <section id="machine-learning" class="level2">
 <h2 class="anchored" data-anchor-id="machine-learning">Machine Learning</h2>
-<p>Let’s explore the benefits of using non-dimensional features in Machine Learning.</p>
-<p>Intuitively non-dimensional features could help models by allowing them to interpolate instead of extrapolate, and reducing the feature space so they can focus on learning the core relationships.</p>
-<p>In the case of the pendulum, this means we could find frequencies on the moon based on earth data as long as the ratio <span class="math inline">\(l/g\)</span> stays somewhat within the training data range, and the model wouldn’t have to fit the nonlinear relationship <span class="math inline">\(\sqrt{\frac{\bullet}{\bullet}}\)</span>.</p>
+<p>Let’s explore the benefits of using dimensionless features in Machine Learning.</p>
+<p>Intuitively dimensionless features could help models by allowing them to interpolate instead of extrapolate, and reducing the feature space so they can focus on learning the core relationships.</p>
+<p>In the case of the pendulum, this means we could find frequencies on the moon based on earth data as long as the ratio <span class="math inline">\(g/l\)</span> stays somewhat within the training data range, and the model wouldn’t have to fit the nonlinear relationship <span class="math inline">\(\sqrt{\frac{\bullet}{\bullet}}\)</span>.</p>
 <blockquote class="blockquote">
-<p>An anecdote: I have successfully used dimensional analysis in practice. A company I worked for needed a model for an inline quality control system. The requirement was that it must be a linear regression model due to it running on PLCs and implemented manually by technicians. A few people before me attempted to solve it using polynomial regression, but there were still problematic nonlinearities, a lot of variance, and the coefficients couldn’t generalize well across product types. I created a non-dimensional group out of the given features, observed that these actually followed a nice linear relationship where one model could describe the full width and breadth of different product types. In the end the model was only feasible &amp; accurate thanks to the non-dimensional features having this uncanny ability to generalize. This was a few years ago but it was implemented in production and estimated to have saved millions of $ since.</p>
+<p>An anecdote: I have successfully used dimensional analysis in practice. A company I worked for needed a model for an inline quality control system. The requirement was that it must be a linear regression model due to it running on PLCs and implemented manually by technicians. A few people before me attempted to solve it using polynomial regression, but there were still problematic nonlinearities, a lot of variance, and the coefficients couldn’t generalize well across product types. I created a dimensionless group out of the given features, observed that these actually followed a nice linear relationship where one model could describe the full range of different product types. In the end the model was only feasible &amp; accurate thanks to the dimensionless features having this uncanny ability to generalize. This was a few years ago but it was implemented in production and estimated to have saved millions of $ since.</p>
 </blockquote>
 <section id="airfoil-example" class="level3">
 <h3 class="anchored" data-anchor-id="airfoil-example">Airfoil Example</h3>
@@ -429,7 +429,7 @@ T&amp;: -1 = -2 \gamma
 </div>
 </div>
 </div>
-<p>To showcase the extrapolation capabilities of non-dimensional features, let’s reserve the largest frequencies as a test set.</p>
+<p>To showcase the extrapolation capabilities of dimensionless features, let’s reserve the largest frequencies as a test set.</p>
 <div id="cell-18" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>test_inds <span class="op">=</span> X[<span class="st">"frequency"</span>] <span class="op">&gt;</span> <span class="dv">2000</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>X_test <span class="op">=</span> X.loc[test_inds,:]</span>
@@ -498,8 +498,8 @@ T&amp;: -1 = -2 \gamma
 </tr>
 </tbody>
 </table>
-<p>We are blessed with two quantities already being dimensionless, especially fortunate for the target as we will see. Scaled sound pressure measured in dB is dimensionless since it is a ratio of pressures, the raw sound pressure would have had dimensionality <span class="math inline">\([M L^{-1} T^{-2}]\)</span> which would neccesitate introducing some auxilliary variable that contains mass, for example the constant density of air.</p>
-<p>We can repeat the same method as before to construct a dimensionless group out of <span class="math inline">\(f, l, v, d\)</span> by assuming the following relation:</p>
+<p>We are blessed with two quantities already being dimensionless, especially fortunate for the target so we can isolate it. Scaled sound pressure measured in dB is dimensionless since it is a ratio of pressures, the raw sound pressure would have had dimensionality <span class="math inline">\([M L^{-1} T^{-2}]\)</span> which would involve some auxilliary variable that contains mass, for example the density of air.</p>
+<p>We can repeat the method from before to construct a dimensionless group out of <span class="math inline">\(f, l, v, d\)</span> by assuming the following relation:</p>
 <p><span class="math display">\[y = f^{\alpha} l^{\beta} v^{\gamma} d^{\delta}\]</span></p>
 <p>Plug in the dimensions</p>
 <p><span class="math display">\[L^0T^0 = 1 = T^{-\alpha} L^{\beta} (L T^{-1})^{\gamma} L^{\delta}\]</span></p>
@@ -511,7 +511,7 @@ T&amp;: -1 = -2 \gamma
 T&amp;: 0 = -\alpha - \gamma  \\
 L&amp;: 0 = \beta + \gamma + \delta
 \end{aligned} \right. \quad \Rightarrow \quad  0 = -\alpha + \beta + \delta \]</span></p>
-<p>This is indeterminate with 2 degrees of freedom. Let’s choose <span class="math inline">\(\alpha = 1\)</span>.</p>
+<p>This is indeterminate with 2 degrees of freedom. By the Buckingham <span class="math inline">\(\pi\)</span> theorem the degrees of freedom is equal to the number of original variables minus the number of base dimensions (<span class="math inline">\(L\)</span>,<span class="math inline">\(T\)</span> etc) and equal to the number of dimensionless variables needed, in this case <span class="math inline">\(4-2=2\)</span>. Let’s choose <span class="math inline">\(\alpha = 1\)</span>.</p>
 <p>This means</p>
 <p><span class="math display">\[
 \left\{
@@ -521,7 +521,7 @@ L&amp;: 0 = \beta + \gamma + \delta
 \gamma &amp;= -1 \\
 \end{aligned} \right.
 \]</span></p>
-<p>Non-dimensional groups are not unique, different choices are possible here, but we need a base that spans the exponents. We can define two non-dimensional variables corresponding to <span class="math inline">\(\delta = 0, \delta=1\)</span>.</p>
+<p>Dimensionless groups are not unique, different choices are possible here, but we need a base that spans the exponents. We can define two dimensionless variables corresponding to <span class="math inline">\(\delta = 0, \delta=1\)</span>.</p>
 <p><span class="math display">\[\Pi_0 :
 \left\{
 \begin{aligned}
@@ -542,7 +542,7 @@ L&amp;: 0 = \beta + \gamma + \delta
 \end{aligned} \right.
 \]</span></p>
 <blockquote class="blockquote">
-<p>Note that <span class="math inline">\(\Pi_0\)</span>, <span class="math inline">\(\Pi_1\)</span> are symmetrical of the form <span class="math inline">\(\frac{fL}{v}\)</span>, this is called the Strouhal Number and is used in fluid dynamics to describe vortex shedding and related phenomena. A physicist would probably choose a dimensionless group consisting of the Strouhal number using the airfoil thickness d and some other number that involves the length l, for example the Reynolds number. But this is a machine learning article so we’ll pretend we didn’t see that.</p>
+<p>Note that <span class="math inline">\(\Pi_0\)</span>, <span class="math inline">\(\Pi_1\)</span> are symmetrical of the form <span class="math inline">\(\frac{fL}{v}\)</span>, this is called the Strouhal number and is used in fluid dynamics to describe vortex shedding and related phenomena. A physicist would maybe choose a dimensionless group consisting of the Strouhal number using the airfoil thickness <span class="math inline">\(d\)</span> and some other number that involves the length <span class="math inline">\(l\)</span>, for example the Reynolds number. But this is a machine learning article so we’ll pretend we didn’t see that.</p>
 </blockquote>
 <div id="cell-28" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> nondim_trans(X, delta_basis<span class="op">=</span>(<span class="dv">0</span>,<span class="dv">1</span>)):</span>
@@ -599,14 +599,14 @@ L&amp;: 0 = \beta + \gamma + \delta
 <span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>rmse_orig_train<span class="op">=</span>root_mean_squared_error(yh_orig_tr, y_train)</span>
 <span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"RMSE: train nondim </span><span class="sc">{</span>rmse_trans_train<span class="sc">:.2f}</span><span class="ss">, train orig </span><span class="sc">{</span>rmse_orig_train<span class="sc">:.2f}</span><span class="ss">, test nondim </span><span class="sc">{</span>rmse_trans_test<span class="sc">:.2f}</span><span class="ss">, test orig </span><span class="sc">{</span>rmse_orig_test<span class="sc">:.2f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>RMSE: train nondim 3.50, train orig 3.62, test nondim 4.65, test orig 8.48</code></pre>
+<pre><code>RMSE: train nondim 3.52, train orig 3.65, test nondim 4.75, test orig 8.53</code></pre>
 </div>
 </div>
 <div id="cell-38" class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, sharex<span class="op">=</span> <span class="va">True</span>, sharey<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(x<span class="op">=</span>y_test, y<span class="op">=</span>yh_trans, hue <span class="op">=</span> X_test[<span class="st">"frequency"</span>], ax<span class="op">=</span>axes[<span class="dv">0</span>], palette <span class="op">=</span> <span class="st">"coolwarm"</span>)<span class="op">;</span></span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(x<span class="op">=</span>y_test, y<span class="op">=</span>yh_orig, hue <span class="op">=</span> X_test[<span class="st">"frequency"</span>], ax<span class="op">=</span>axes[<span class="dv">1</span>], palette <span class="op">=</span> <span class="st">"coolwarm"</span>)<span class="op">;</span></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_title(<span class="st">'Non-dimensional'</span>)<span class="op">;</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_title(<span class="st">'Dimensionless'</span>)<span class="op">;</span></span>
 <span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_title(<span class="st">'Original'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
@@ -616,7 +616,7 @@ L&amp;: 0 = \beta + \gamma + \delta
 </div>
 </div>
 </div>
-<p>In this case the nondimensional version seems to have learned a bit more about what happens at higher frequencies than the model based on the original features. It is also better calibrated out of sample, the original version overshoots. When testing it became clear that the original version wins in many cases when the test set isn’t as extreme. The best method may be to add the nondimensional features to the originals. I hope this illustrates the point of using dimensional analysis.</p>
+<p>In this case the dimensionless version seems to have learned a bit more about what happens at higher frequencies than the model based on the original features. It is also better calibrated out of sample, the original version overshoots. When testing it became clear that the original version wins in many cases when the test set isn’t as extreme. The best method may be to add the dimensionless features to the originals. I hope this illustrates the point of using dimensional analysis.</p>
 
 
 </section>

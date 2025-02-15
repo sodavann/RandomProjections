@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/LLMs 2025/LLMs.html",
       "/posts/Nondimensional Features/ndim.html",
       "/posts/Bayesian Persuasion/bn.html"
     ]

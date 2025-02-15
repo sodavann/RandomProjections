@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="lta">
+<meta name="dcterms.date" content="2025-02-15">
 
-<title>Random Projections</title>
+<title>LLMs, CoT and Implicit Reasoning – Random Projections</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,24 +25,22 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-listing/list.min.js"></script>
-<script src="site_libs/quarto-listing/quarto-listing.js"></script>
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-bf19b75f51ea680c8de03e84aa65eabd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-bf19b75f51ea680c8de03e84aa65eabd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -68,35 +68,6 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-<script>
-
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-title','listing-author','listing-date','listing-image','listing-description','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-title","listing-author","listing-date","listing-image","listing-description","listing-categories"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
 
   <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
@@ -128,17 +99,17 @@ window.Quarto = {
 };
 </script>
 
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="nav-fixed fullcontent">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top quarto-banner">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Random Projections</span>
     </a>
   </div>
@@ -149,7 +120,7 @@ window.Quarto = {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./about.html"> 
+    <a class="nav-link" href="../../about.html"> 
 <span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item compact">
@@ -172,140 +143,83 @@ window.Quarto = {
 <!-- content -->
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
-    <div class="quarto-title column-page-left">
-      <h1 class="title">Random Projections</h1>
-                      </div>
+    <div class="quarto-title column-body">
+      <h1 class="title">LLMs, CoT and Implicit Reasoning</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">Machine Learning</div>
+                <div class="quarto-category">LLMs</div>
+              </div>
+                  </div>
   </div>
     
   
-  <div class="quarto-title-meta column-page-left">
+  <div class="quarto-title-meta">
 
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>lta </p>
+            </div>
+    </div>
       
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">February 15, 2025</p>
+      </div>
+    </div>
     
       
     </div>
     
   
-  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
-    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(3)</span></div><div class="category" data-category="QmF5ZXNpYW4lMjBBbmFseXNpcw==">Bayesian Analysis <span class="quarto-category-count">(1)</span></div><div class="category" data-category="SmF4">Jax <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TExNcw==">LLMs <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TWFjaGluZSUyMExlYXJuaW5n">Machine Learning <span class="quarto-category-count">(3)</span></div><div class="category" data-category="UGh5c2ljcw==">Physics <span class="quarto-category-count">(1)</span></div></div></div>
+    
 <!-- main -->
-<main class="content quarto-banner-title-block column-page-left" id="quarto-document-content">
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
 
 
+<section id="some-important-llm-developments-in-2025" class="level2">
+<h2 class="anchored" data-anchor-id="some-important-llm-developments-in-2025">Some important LLM developments in 2025</h2>
+<p>The last few months have been tumultuous for AI, with <a href="https://github.com/deepseek-ai/DeepSeek-R1">Deepseek’s R1</a> demonstrating how Reinforcement Learning can bring out enough resoning power from smaller models to compete with models 10 times as expensive to run. Not long after this release a 3B model was <a href="https://github.com/Jiayi-Pan/TinyZero">trained for 30$</a>, learning to develop reasoning capabilities on its own.</p>
+<p>These breakthroughs exploit Chain of Thought (CoT), where models learn to output text as intermediate reasoning steps, similar to how some of us humans think using an inner monologue.</p>
+<p>These models can step through the solution while talking to itself, essentially <a href="https://en.wikipedia.org/wiki/Rubber_duck_debugging">rubber ducking</a>. The drawback is that the whole CoT has to fit in the context window. Could it also be limited by the fact that reasoning <em>only</em> happens through language, maybe this isn’t optimal for tasks where humans would call on spatial reasoning, intuition, morality or similar faculties?</p>
+<p>Recently <a href="https://arxiv.org/abs/2502.05171">a new paper</a> explores how to induce non-verbal reasoning by letting the reasoning steps happen in latent space. It demonstrates how a Recurrent Neural Network placed between the embedding and attention layers acts as a latent space equivalent of CoT. Instead of verbalizing the reasoning steps, it explores “reason” in the embedding space directly. My personal opinion is that this is a much richer form of reasoning, possibly allowing for more abstraction, and maybe even computation or a <a href="https://www.linkedin.com/posts/yann-lecun_lots-of-confusion-about-what-a-world-model-activity-7165738293223931904-vdgR/">world model</a>?</p>
+</section>
+<section id="implicit-reasoning-in-llms" class="level2">
+<h2 class="anchored" data-anchor-id="implicit-reasoning-in-llms">Implicit reasoning in LLMs</h2>
+<p>I’d like to dive a little deeper into the paper above and add my own musings.</p>
+<p>The innovation in the paper is a RNN with residual connections that steps through a chain of reasoning for each embedded token. The recurrence happens k times until convergence to a fixed point, so the model will decide when it’s done reasoning, and the length is different for each token.</p>
+<p>I think it would be interesting to see this latent reasoning be explored in terms of <a href="https://implicit-layers-tutorial.org/neural_odes/">Neural ODEs</a> and <a href="https://implicit-layers-tutorial.org/deep_equilibrium_models/">Deep Equilibrium Networks</a>.</p>
+<p>The <a href="https://en.wikipedia.org/wiki/Implicit_function_theorem#Banach_space_version">implicit function theorem</a> tells us that such a fixed point iteration <span class="math inline">\(\lim_{n\rightarrow \infty} f_n \circ f_{n-1}\)</span> can be described by one pass through another function <span class="math inline">\(f\)</span> of the same dimension. The “pre-iterated” RNN if you will. This is the basis for Deep Equilibrium Networks, and implies the (latent) chain of thought can be summarized by just one layer. No longer a chain of thought, maybe closer to <em>intuition</em>?</p>
+<p>A RNN can be seen as a first order discretization of a Neural ODE. This technique could possibly allow for memory savings, avoiding the truncated backprop done in the paper. A drawback is that they can only represent smooth homeomorphisms, but can be remedied by <a href="https://arxiv.org/abs/1904.01681">introducing additional dimensions</a>. This would essentially let solution paths cross over each other by utilizing an extra dimension. Adding extra dimensions sounds to me like you’d enrich the reasoning behaviour beyond concepts that could be described in words. You would have a whole separate embedding sub-space dedicated to pure non-verbal <em>reasoning</em> or maybe <em>computation</em>?</p>
+<div data-align="center">
+<figure class="figure">
+<img src="dynamics.png" style="margin: auto;" class="figure-img">
+<figcaption>
+The authors call these behaviours <i>orbits</i> and <i>sliders</i>, I think they look a lot like ODE dynamics.
+</figcaption>
+</figure>
+</div>
+<p>I’ve also been curious about introducing completely new tokens just for reasoning in CoT, and letting the model assign meaning to these through RL. I’m speculating this could let the model use these as computational building blocks for abstract reasoning.</p>
+</section>
+<section id="future" class="level2">
+<h2 class="anchored" data-anchor-id="future">Future</h2>
+<p>I’m keeping an eye out for more papers and models that show emergent reasoning properties of LLMs. To me, the progress in the past month has been some of the most interesting in AI so far, and I’m looking forward to what we’ll see later on in 2025.</p>
+<p>I think this concept of latent reasoning will catch on, and possibly extended with other techniques.</p>
+<p>I expect an even more intense focus on Reinforcement Learning given the success of R1.</p>
+<p>I think LLMs will learn to compute and reason non-verbally in ways that will make them beat the current SOTA on benchmarks like ARC-AGI.</p>
+<p>Let’s see whether that truly means AGI or not, my guess is the consensus will still be No in December.</p>
 
 
+</section>
 
-
-<div class="quarto-listing quarto-listing-container-grid" id="listing-listing">
-<div class="list grid quarto-listing-cols-3">
-<div class="g-col-1" data-index="0" data-categories="TWFjaGluZSUyMExlYXJuaW5nJTJDTExNcw==" data-listing-date-sort="1739574000000" data-listing-file-modified-sort="1739641675614" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="4" data-listing-word-count-sort="661">
-<a href="./posts/LLMs 2025/LLMs.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top"><img src="posts\LLMs 2025\dynamics.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-LLMs, CoT and Implicit Reasoning
-</h5>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('TWFjaGluZSUyMExlYXJuaW5n'); return false;">
-Machine Learning
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('TExNcw=='); return false;">
-LLMs
-</div>
-</div>
-<div class="card-text listing-description">
-The last few months have been tumultuous for AI, with Deepseek’s R1 demonstrating how Reinforcement Learning can bring out enough resoning power from smaller models to…
-</div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-lta
-</div>
-<div class="listing-date">
-Feb 15, 2025
-</div>
-</div>
-</div>
-</div>
-</a>
-</div>
-<div class="g-col-1" data-index="1" data-categories="TWFjaGluZSUyMExlYXJuaW5nJTJDUGh5c2ljcw==" data-listing-date-sort="1738018800000" data-listing-file-modified-sort="1738086222236" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="6" data-listing-word-count-sort="1097">
-<a href="./posts/Nondimensional Features/ndim.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top"><img src="posts\Nondimensional Features\pendulumswing.jpg" style="height: 150px;"  class="thumbnail-image card-img"/></p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Dimensionless Features
-</h5>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('TWFjaGluZSUyMExlYXJuaW5n'); return false;">
-Machine Learning
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('UGh5c2ljcw=='); return false;">
-Physics
-</div>
-</div>
-<div class="card-text listing-description">
-When dealing with machine learning problems for physical systems the quantities we use as features and targets have <em>dimensionality</em>.
-</div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-lta
-</div>
-<div class="listing-date">
-Jan 28, 2025
-</div>
-</div>
-</div>
-</div>
-</a>
-</div>
-<div class="g-col-1" data-index="2" data-categories="TWFjaGluZSUyMExlYXJuaW5nJTJDQmF5ZXNpYW4lMjBBbmFseXNpcyUyQ0pheA==" data-listing-date-sort="1726783200000" data-listing-file-modified-sort="1738089056344" data-listing-date-modified-sort="1738018800000" data-listing-reading-time-sort="7" data-listing-word-count-sort="1221">
-<a href="./posts/Bayesian Persuasion/bn.html" class="quarto-grid-link">
-<div class="quarto-grid-item card h-100 card-left">
-<p class="card-img-top"><img src="posts\Bayesian Persuasion\bn_files\figure-html\cell-2-output-1.png" style="height: 150px;"  class="thumbnail-image card-img"/></p>
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Bayesian Persuasion
-</h5>
-<div class="listing-categories">
-<div class="listing-category" onclick="window.quartoListingCategory('TWFjaGluZSUyMExlYXJuaW5n'); return false;">
-Machine Learning
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('QmF5ZXNpYW4lMjBBbmFseXNpcw=='); return false;">
-Bayesian Analysis
-</div>
-<div class="listing-category" onclick="window.quartoListingCategory('SmF4'); return false;">
-Jax
-</div>
-</div>
-<div class="card-text listing-description">
-In this post we explore the connections between standard Machine Learning methods and Bayesian inference. We also show how to build a Bayesian neural network without relying…
-</div>
-<div class="card-attribution card-text-small justify">
-<div class="listing-author">
-lta
-</div>
-<div class="listing-date">
-Sep 20, 2024
-</div>
-</div>
-</div>
-</div>
-</a>
-</div>
-</div>
-<div class="listing-no-matching d-none">
-No matching items
-</div>
-</div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {

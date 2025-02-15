@@ -227,7 +227,9 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="dimensional-analysis">Dimensional Analysis</h2>
 <p>When dealing with machine learning problems for physical systems the quantities we use as features and targets have <em>dimensionality</em>.</p>
 <p>For example consider a simple pendulum of length l <span class="math inline">\([L]\)</span>, mass m <span class="math inline">\([M]\)</span>, gravitational (acceleration) constant g <span class="math inline">\([L T^{-2}]\)</span>, where we want to learn the frequency f <span class="math inline">\([T^{-1}]\)</span>.</p>
+<div data-align="center">
 <p><img src="pendulumswing.jpg" width="320" style="display=block; margin-left:auto; margin-right:auto"></p>
+</div>
 <p>We could feed these features as-is to a machine learning model that might do very well on lab generated data, but would it be able to generalize to let’s say a pendulum the size of a carnival ride or a pendulum on the moon?</p>
 <p>In order to help the model we could try to incorporate some physics knowledge. The basic idea of dimensional analysis is that for any equation the dimensions must match on the left- and right hand sides.</p>
 <p>By ansatz:</p>

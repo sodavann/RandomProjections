@@ -184,19 +184,19 @@ window.Quarto = {
 
 
 
-<section id="some-important-llm-developments-in-2025" class="level2">
-<h2 class="anchored" data-anchor-id="some-important-llm-developments-in-2025">Some important LLM developments in 2025</h2>
-<p>The last few months have been tumultuous for AI, with <a href="https://github.com/deepseek-ai/DeepSeek-R1">Deepseek’s R1</a> demonstrating how Reinforcement Learning can bring out enough resoning power from smaller models to compete with models 10 times as expensive to run. Not long after this release a 3B model was <a href="https://github.com/Jiayi-Pan/TinyZero">trained for 30$</a>, learning to develop reasoning capabilities on its own.</p>
+<section id="interesting-llm-developments-in-2025" class="level2">
+<h2 class="anchored" data-anchor-id="interesting-llm-developments-in-2025">Interesting LLM Developments in 2025</h2>
+<p>The last few months have been tumultuous for AI, with <a href="https://github.com/deepseek-ai/DeepSeek-R1">Deepseek’s R1</a> demonstrating how Reinforcement Learning can bring out enough reasoning power from smaller models to compete with models 10 times as expensive to run. Not long after this release a 3B model was <a href="https://github.com/Jiayi-Pan/TinyZero">trained for 30$</a>, learning to develop reasoning capabilities on its own.</p>
 <p>These breakthroughs exploit Chain of Thought (CoT), where models learn to output text as intermediate reasoning steps, similar to how some of us humans think using an inner monologue.</p>
 <p>These models can step through the solution while talking to itself, essentially <a href="https://en.wikipedia.org/wiki/Rubber_duck_debugging">rubber ducking</a>. The drawback is that the whole CoT has to fit in the context window. Could it also be limited by the fact that reasoning <em>only</em> happens through language, maybe this isn’t optimal for tasks where humans would call on spatial reasoning, intuition, morality or similar faculties?</p>
 <p>Recently <a href="https://arxiv.org/abs/2502.05171">a new paper</a> explores how to induce non-verbal reasoning by letting the reasoning steps happen in latent space. It demonstrates how a Recurrent Neural Network placed between the embedding and attention layers acts as a latent space equivalent of CoT. Instead of verbalizing the reasoning steps, it explores “reason” in the embedding space directly. My personal opinion is that this is a much richer form of reasoning, possibly allowing for more abstraction, and maybe even computation or a <a href="https://www.linkedin.com/posts/yann-lecun_lots-of-confusion-about-what-a-world-model-activity-7165738293223931904-vdgR/">world model</a>?</p>
 </section>
 <section id="implicit-reasoning-in-llms" class="level2">
-<h2 class="anchored" data-anchor-id="implicit-reasoning-in-llms">Implicit reasoning in LLMs</h2>
+<h2 class="anchored" data-anchor-id="implicit-reasoning-in-llms">Implicit Reasoning in LLMs</h2>
 <p>I’d like to dive a little deeper into the paper above and add my own musings.</p>
-<p>The innovation in the paper is a RNN with residual connections that steps through a chain of reasoning for each embedded token. The recurrence happens k times until convergence to a fixed point, so the model will decide when it’s done reasoning, and the length is different for each token.</p>
+<p>The innovation in the paper is a RNN with skip connections that steps through a chain of reasoning for each embedded token. The recurrence happens k times until convergence to a fixed point, so the model will decide when it’s done reasoning, and the length is different for each token.</p>
 <p>I think it would be interesting to see this latent reasoning be explored in terms of <a href="https://implicit-layers-tutorial.org/neural_odes/">Neural ODEs</a> and <a href="https://implicit-layers-tutorial.org/deep_equilibrium_models/">Deep Equilibrium Networks</a>.</p>
-<p>The <a href="https://en.wikipedia.org/wiki/Implicit_function_theorem#Banach_space_version">implicit function theorem</a> tells us that such a fixed point iteration <span class="math inline">\(\lim_{n\rightarrow \infty} f_n \circ f_{n-1}\)</span> can be described by one pass through another function <span class="math inline">\(f\)</span> of the same dimension. The “pre-iterated” RNN if you will. This is the basis for Deep Equilibrium Networks, and implies the (latent) chain of thought can be summarized by just one layer. No longer a chain of thought, maybe closer to <em>intuition</em>?</p>
+<p>The <a href="https://en.wikipedia.org/wiki/Implicit_function_theorem#Banach_space_version">implicit function theorem</a> tells us that such a fixed point iteration <span class="math inline">\(\lim_{n\rightarrow \infty} f_n \circ f_{n-1}\)</span> can be described by one pass through another function <span class="math inline">\(f\)</span>. The “pre-iterated” RNN if you will. This is the basis for Deep Equilibrium Networks, and implies the (latent) chain of thought can be summarized by just one layer. No longer a chain of thought, maybe closer to <em>intuition</em>?</p>
 <p>A RNN can be seen as a first order discretization of a Neural ODE. This technique could possibly allow for memory savings, avoiding the truncated backprop done in the paper. A drawback is that they can only represent smooth homeomorphisms, but can be remedied by <a href="https://arxiv.org/abs/1904.01681">introducing additional dimensions</a>. This would essentially let solution paths cross over each other by utilizing an extra dimension. Adding extra dimensions sounds to me like you’d enrich the reasoning behaviour beyond concepts that could be described in words. You would have a whole separate embedding sub-space dedicated to pure non-verbal <em>reasoning</em> or maybe <em>computation</em>?</p>
 <div data-align="center">
 <figure class="figure">
@@ -213,8 +213,8 @@ The authors call these behaviours <i>orbits</i> and <i>sliders</i>, I think they
 <p>I’m keeping an eye out for more papers and models that show emergent reasoning properties of LLMs. To me, the progress in the past month has been some of the most interesting in AI so far, and I’m looking forward to what we’ll see later on in 2025.</p>
 <p>I think this concept of latent reasoning will catch on, and possibly extended with other techniques.</p>
 <p>I expect an even more intense focus on Reinforcement Learning given the success of R1.</p>
-<p>I think LLMs will learn to compute and reason non-verbally in ways that will make them beat the current SOTA on benchmarks like ARC-AGI.</p>
-<p>Let’s see whether that truly means AGI or not, my guess is the consensus will still be No in December.</p>
+<p>I think LLMs will learn to compute and reason non-verbally in ways that will let equal or smaller sized models beat the current SOTA on benchmarks like ARC-AGI.</p>
+<p>AGI in 2025? My guess is No.</p>
 
 
 </section>

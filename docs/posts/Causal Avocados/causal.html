@@ -222,8 +222,9 @@ window.Quarto = {
 
 
 
-<p>Predicions are the bread and butter of Machine Learning &amp; Data Science. However, the connection between data and reality often involves a leap of faith where we gather insights about data and turn them into statements about the real world. Have you ever built a recommender system and thought twice about <em>why</em> it would drive engagement? This problem is common for all natural sciences and is called the <em>problem of induction</em>. One way of justifying this leap is to make assumptions about the real world or the data generating process (DGP). This makes Bayesian stats “more inductive” than Frequentist in my humble opinion, since we include a subjective prior assumption that ties descriptive sample statistics back to (our subjective) reality.</p>
-<p>Without getting too philosophical, the branch of statistics aiming to take induction to its limits is causal inference. Causality is the study of why things happen, and what would have happened otherwise. The main difference lies in its attention to the DGP. An analysis starts with a causal directed acyclic graph (DAG) encoding assumptions about what affects what causally.</p>
+<p>Prediction is the bread and butter of Machine Learning. However, the connection between data and reality often involves a leap of faith where we gather insights about our sample and turn them into statements about the real world. Have you ever built a recommender system and thought twice about <em>why</em> it would drive engagement? Considered whether your predictions really are valid decision support?</p>
+<p>This problem is common for all natural sciences and is called the <em>problem of induction</em>. One way of justifying this leap is to make assumptions about the real world or the data generating process (DGP). This makes Bayesian stats a little “more inductive” than Frequentist in my humble opinion, since we include a subjective prior assumption that clearly ties descriptive sample statistics back to (our subjective) reality.</p>
+<p>Without getting too philosophical, the branch of statistics aiming to take induction to its limits is causal inference. Causality is the study of why things happen, and what would have happened otherwise. The main difference lies in its attention to the DGP. An analysis starts with a causal directed acyclic graph (DAG) encoding assumptions about what affects what causally. The goal is to reason about counterfactuals and directly estimate what impact our decisions will have. Maybe the avocado toast of Machine Learning?</p>
 <p>There is way too much on this topic to mention here but the two main cases to be aware of are confounders and mediators.</p>
 <p>Consider the causal impact of T on Y, where X and M are some other measurable quantities.</p>
 <div class="cell" data-layout-align="default">
@@ -233,7 +234,7 @@ window.Quarto = {
 <div>
 <svg width="672" height="480" viewbox="0.00 0.00 174.07 284.80" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" style="; max-width: none; max-height: none">
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 280.8)">
-<title>D</title>
+<title>DAG</title>
 <polygon fill="white" stroke="transparent" points="-4,4 -4,-280.8 170.07,-280.8 170.07,4 -4,4"></polygon>
 <text text-anchor="middle" x="83.03" y="-8.2" font-family="Times,serif" font-size="14.00">X confounder, M mediator</text>
 <!-- X -->
@@ -298,7 +299,7 @@ window.Quarto = {
 </div>
 </div>
 <p>Confounders are variables that affect both the treatment and the outcome. Mediators are variables that affect the outcome as a consequence of the treatment. Rule of thumb, control for confounders but not mediators.</p>
-<p>Take for example the causal impact of ice cream sales on drowning accidents. There is of course none, which you can discover by controlling for the confounder <em>weather</em>. Mediators are more complex, these variables can obscure the true causal relationship if you control for them since they absorb some of the causal pathway from the treatment to the outcome. In a sociology study, if you include socioeconomic status and the treatment is one of the variables used to calculate that status, the socioeconomic status acts as a mediator. Just pick one.</p>
+<p>Take for example the causal impact of ice cream sales on drowning accidents. There is of course none, which you can discover by controlling for the confounder <em>weather</em>. Mediators are more complex, these variables can obscure the true causal relationship if you control for them since they absorb some of the causal pathway from the treatment to the outcome. In a sociology study, if you include socioeconomic status and the treatment is one of the variables used to calculate that status, the socioeconomic status could act as a mediator.</p>
 <p>These deliberations about causal pathways underlying reality is the essence of causal inference. The rest is statistics as usual as we will see.</p>
 <div id="ddda6f41" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -312,7 +313,7 @@ window.Quarto = {
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>plt.rc(<span class="st">"axes.spines"</span>, top<span class="op">=</span><span class="va">False</span>, right<span class="op">=</span><span class="va">False</span>)</span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>plt.rc(<span class="st">"figure"</span>, figsize<span class="op">=</span> (<span class="dv">12</span>,<span class="dv">8</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p><a href="https://www.kaggle.com/datasets/neuromusic/avocado-prices/data">This Kaggle user</a> posed the question whether the US milennial housing crisis is caused by frivolous spending on avocado toast. I’m skeptical, and in any case I’d need some data on age breakdowns, credit scores and wages vs inflation to even begin looking into it. Let’s instead pretend we’re a US avocado monopolist trying to squeeze every last penny out of those entitled milennials. What is the price elasticity of avocados in the US?</p>
+<p><a href="https://www.kaggle.com/datasets/neuromusic/avocado-prices/data">This Kaggle user</a> posed the question whether the US milennial housing crisis is caused by frivolous spending on avocado toast. I’m skeptical, and in any case I’d need some data on age breakdowns, credit scores and wages vs inflation to even begin looking into it. Let’s instead pretend we’re a US avocado monopolist trying to squeeze every last penny out of those entitled milennials. What is the market price elasticity of avocados in the US?</p>
 <div id="9c35000c" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> kagglehub</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -540,7 +541,9 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>We have some very disparate regions with a wide range of sales (the aggregate US is one of them). Also, econometric theory commonly assumes a sales to price relationship of the form <span class="math inline">\(\text{volume} \propto \text{price}^q\)</span>, so let’s assume the basic model <span class="math inline">\(\log{\text{volume}} = \beta_0 + \beta_1 \log{\text{price}} + \epsilon\)</span>. Volume and price will refer to their log transform from now on.</p>
+<p>We have some very disparate regions with a wide range of sales (the aggregate US is one of them). Also, econometric theory commonly assumes a sales to price relationship of the form <span class="math inline">\(\text{volume} \propto \text{price}^q\)</span>, so let’s assume the basic model</p>
+<p><span class="math display">\[\log{\text{volume}} = \beta_0 + \beta_1 \log{\text{price}} + \varepsilon\]</span></p>
+<p>Volume and price will refer to their log transform from now on.</p>
 <div id="9dae3cf8" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>Y <span class="op">=</span> np.log(df[<span class="st">'Total Volume'</span>])</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> df.drop([<span class="st">'AveragePrice'</span>,<span class="st">'Total Volume'</span>], axis<span class="op">=</span><span class="dv">1</span>)</span>
@@ -713,7 +716,7 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>This looks linear grouped by different regions and organic vs conventional.</p>
+<p>This looks fairly linear grouped by different regions and organic vs conventional.</p>
 <div id="5dd5ba9e" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pd.DataFrame(pd.concat([Y, X, T], axis<span class="op">=</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -794,14 +797,14 @@ window.Quarto = {
 </div>
 <p><br><br> According to this view each <span class="math inline">\(1\%\)</span> increase in price is associated with a <span class="math inline">\(-4.7\%\)</span> drop in sales. That’s all well and good, and would be a valid conclusion if you were trying to predict volumes on a similar dataset in the future. We can’t claim a causal relationship though since we haven’t reasoned around the causal graph, confounders etc.</p>
 <p>I will assume X are counfounding factors that affect both the price and the volume sold. There are some important features that can explain both the average avocado price, and the population &amp; relative appetite for avocados.</p>
-<p>Now let’s assume a linear model where we include the region, type and time.</p>
+<p>Now let’s assume a linear model where we include the region, avocado type and time.</p>
 <div id="2cd87acd" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> smf.ols(<span class="st">'Q("Total Volume") ~ AveragePrice + C(region) + AveragePrice*C(type) + C(year)*C(month) + PropSmall'</span>, data <span class="op">=</span> data).fit(cov_type<span class="op">=</span><span class="st">'cluster'</span>, cov_kwds<span class="op">=</span>{<span class="st">'groups'</span>: data[<span class="st">'region'</span>], <span class="st">'use_correction'</span>:<span class="va">True</span>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="488abf1c" class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>model.params[<span class="st">"AveragePrice"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="12">
-<pre><code>np.float64(-1.3887572987705707)</code></pre>
+<div id="488abf1c" class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Log-log price elasticity (ATE): </span><span class="sc">{</span>model<span class="sc">.</span>params[<span class="st">"AveragePrice"</span>]<span class="sc">:.2f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Log-log price elasticity (ATE): -1.39</code></pre>
 </div>
 </div>
 <div id="6e9c435c" class="cell" data-execution_count="13">
@@ -814,11 +817,11 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>With this model, controlling for confounders we instead found a <span class="math inline">\(-1.4\%\)</span> drop in sales. Turns out the previous estimate was counfounded by X, when we controlled for region, organic vs non-organic etc the causal relationship emerged.</p>
-<p>Any Data Scientist worth their salt would have included these features in a ML model anyway, the key difference is that we made a causal assumption about confounders and ruled out any mediators which lets us present this as a causal effect and not just correlation. There are other problems that can arise with applying Machine Learning to problems like this, you have to be aware of biases from regularization and weak treatment effects ignored by the model. This is why a linear regression is the first choice for causal analyses.</p>
+<p>With this model, controlling for confounders we instead found a <span class="math inline">\(-1.4\%\)</span> drop in sales. Turns out the previous estimate was counfounded by X. Some regions have more expensive avocados and fewer buyers as a baseline, the previous estimate doesn’t help us understand what would happen if we were to change the price in Boston. By controlling for confounders we are isolating the variance between price and sales caeteris paribus, and the causal relationship emerged.</p>
+<p>Any Data Scientist worth their salt would have included these features in a ML model anyway, the key difference is that we made a causal assumption about confounders and ruled out any mediators which lets us present this as a causal effect and not just correlation. There are other problems that can arise with applying Machine Learning to problems like this, you have to be aware of biases from regularization, overfitting and weak treatment effects ignored by the model. Linear regression automatically partials out any confounding effects, which is why it’s so suitable for causal analyses.</p>
 <p>There are causal ML approaches such as metalearners and Double Machine Learning that can mitigate these flaws. Fundamentally we are no longer trying to optimize predictive power (your usual loss function), we are <em>just</em> interested in the marginal effects of the treatment on the outcome. <em>Beware of applying ML naively to these problems, the best predictor is not necessarily the best causal model</em>.</p>
 <p>For fun, let’s use these insights to set the right price depending on our wholesale avocado costs. Here’s a simulation for some different cases.</p>
-<div id="4474e2bc" class="cell" data-execution_count="15">
+<div id="4474e2bc" class="cell" data-execution_count="22">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> wholesale_cost <span class="kw">in</span> np.linspace(<span class="fl">0.2</span>, <span class="dv">1</span>, <span class="dv">10</span>):</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    prices <span class="op">=</span> np.linspace(wholesale_cost,<span class="dv">4</span>, <span class="dv">1000</span>)</span>
@@ -842,7 +845,8 @@ window.Quarto = {
 </div>
 <p>The optimal price can be found using the criterion <span class="math inline">\(\partial{\text{Profit}}=0\)</span></p>
 <p><span class="math display">\[\text{P} = S(p)(p-c) \implies \frac{\partial{P}}{\partial{p}} = \frac{\partial{S}}{\partial{p}}(p-c)+S(p)\]</span> <span class="math display">\[p^* = c-\frac{S}{\frac{\partial{S}}{\partial{p}}}\]</span></p>
-<p><span class="math inline">\(\frac{\partial{S}}{\partial{p}}\)</span> is the local price elasticity. This is the optimal price according to the model. Should we use it as-is? Probably not, I assumed we were an avocado monopolist, in the real world we would probably have competition and would have to set a lower price. Goes to show there are alway unmeasured confounders out there. Maybe some clever instrumental variable could help?</p>
+<p><span class="math inline">\(\frac{\partial{S}}{\partial{p}}\)</span> is the local market price elasticity. This is the optimal price according to the model.</p>
+<p>Should retailers adopt this model? Probably not, I assumed we were an avocado monopolist, in the real world we would probably have competition and would have to set a lower price. We would have to estimate our firm’s price elasticity which is higher than the market’s. Goes to show there are alway unmeasured confounders out there.</p>
 <p>Some good resources on causality</p>
 <p><a href="https://matheusfacure.github.io/python-causality-handbook/landing-page.html">Causal Inference for The Brave and True</a></p>
 <p><a href="https://causalml-book.org/">Applied Causal Inference Powered by ML and AI</a></p>

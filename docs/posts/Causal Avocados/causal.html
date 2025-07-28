@@ -222,7 +222,7 @@ window.Quarto = {
 
 
 
-<p>Prediction is the bread and butter of Machine Learning. However, the connection between data and reality often involves a leap of faith where we gather insights about our sample and turn them into statements about the real world. Have you ever built a recommender system and thought twice about <em>why</em> it would drive engagement? Considered whether your predictions really are valid decision support?</p>
+<p>Predictions is the bread and butter of Machine Learning. However, the connection between data and reality often involves a leap of faith where we gather insights about our sample and turn them into statements about the real world. Have you ever built a recommender system and thought twice about <em>why</em> it would drive engagement? Considered whether your predictions really are valid decision support?</p>
 <p>This problem is common for all natural sciences and is called the <em>problem of induction</em>. One way of justifying this leap is to make assumptions about the real world or the data generating process (DGP). This makes Bayesian stats a little “more inductive” than Frequentist in my humble opinion, since we include a subjective prior assumption that clearly ties descriptive sample statistics back to (our subjective) reality.</p>
 <p>Without getting too philosophical, the branch of statistics aiming to take induction to its limits is causal inference. Causality is the study of why things happen, and what would have happened otherwise. The main difference lies in its attention to the DGP. An analysis starts with a causal directed acyclic graph (DAG) encoding assumptions about what affects what causally. The goal is to reason about counterfactuals and directly estimate what impact our decisions will have. Maybe the avocado toast of Machine Learning?</p>
 <p>There is way too much on this topic to mention here but the two main cases to be aware of are confounders and mediators.</p>
@@ -801,7 +801,7 @@ window.Quarto = {
 <div id="2cd87acd" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> smf.ols(<span class="st">'Q("Total Volume") ~ AveragePrice + C(region) + AveragePrice*C(type) + C(year)*C(month) + PropSmall'</span>, data <span class="op">=</span> data).fit(cov_type<span class="op">=</span><span class="st">'cluster'</span>, cov_kwds<span class="op">=</span>{<span class="st">'groups'</span>: data[<span class="st">'region'</span>], <span class="st">'use_correction'</span>:<span class="va">True</span>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="488abf1c" class="cell" data-execution_count="25">
+<div id="488abf1c" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Log-log price elasticity (ATE): </span><span class="sc">{</span>model<span class="sc">.</span>params[<span class="st">"AveragePrice"</span>]<span class="sc">:.2f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Log-log price elasticity (ATE): -1.39</code></pre>
@@ -821,7 +821,7 @@ window.Quarto = {
 <p>Any Data Scientist worth their salt would have included these features in a ML model anyway, the key difference is that we made a causal assumption about confounders and ruled out any mediators which lets us present this as a causal effect and not just correlation. There are other problems that can arise with applying Machine Learning to problems like this, you have to be aware of biases from regularization, overfitting and weak treatment effects ignored by the model. Linear regression automatically partials out any confounding effects, which is why it’s so suitable for causal analyses.</p>
 <p>There are causal ML approaches such as metalearners and Double Machine Learning that can mitigate these flaws. Fundamentally we are no longer trying to optimize predictive power (your usual loss function), we are <em>just</em> interested in the marginal effects of the treatment on the outcome. <em>Beware of applying ML naively to these problems, the best predictor is not necessarily the best causal model</em>.</p>
 <p>For fun, let’s use these insights to set the right price depending on our wholesale avocado costs. Here’s a simulation for some different cases.</p>
-<div id="4474e2bc" class="cell" data-execution_count="22">
+<div id="4474e2bc" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> wholesale_cost <span class="kw">in</span> np.linspace(<span class="fl">0.2</span>, <span class="dv">1</span>, <span class="dv">10</span>):</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    prices <span class="op">=</span> np.linspace(wholesale_cost,<span class="dv">4</span>, <span class="dv">1000</span>)</span>
@@ -844,9 +844,10 @@ window.Quarto = {
 </div>
 </div>
 <p>The optimal price can be found using the criterion <span class="math inline">\(\partial{\text{Profit}}=0\)</span></p>
-<p><span class="math display">\[\text{P} = S(p)(p-c) \implies \frac{\partial{P}}{\partial{p}} = \frac{\partial{S}}{\partial{p}}(p-c)+S(p)\]</span> <span class="math display">\[p^* = c-\frac{S}{\frac{\partial{S}}{\partial{p}}}\]</span></p>
-<p><span class="math inline">\(\frac{\partial{S}}{\partial{p}}\)</span> is the local market price elasticity. This is the optimal price according to the model.</p>
-<p>Should retailers adopt this model? Probably not, I assumed we were an avocado monopolist, in the real world we would probably have competition and would have to set a lower price. We would have to estimate our firm’s price elasticity which is higher than the market’s. Goes to show there are alway unmeasured confounders out there.</p>
+<p><span class="math display">\[\text{P} = S(p)(p-c) \implies \frac{\partial{P}}{\partial{p}} = \frac{\partial{S}}{\partial{p}}(p-c)+S(p) \implies p^* = c-\frac{S}{\frac{\partial{S}}{\partial{p}}}\]</span></p>
+<p><span class="math inline">\(\frac{\partial{S}}{\partial{p}}\)</span> is the market price elasticity. Using our simple model we get the following expression for the optimal price.</p>
+<p><span class="math display">\[p^* =  c-\frac{\alpha p^\beta}{\beta \alpha p^{\beta-1}} = c - \frac{p^*}{\beta} \implies p^* = \frac{c}{1+ \frac{1}{\beta}}\]</span></p>
+<p>Should retailers adopt this model? Probably not, I assumed we were an avocado monopolist, in the real world we would probably have competition and would have to set a lower price. This causal effect is valid for the average market price, which we don’t set unless we have a monopoly. We would have to estimate our firm’s price elasticity which is higher than the market’s, either through experimentation or using additional data on competitor prices, market share &amp; dispersion etc. Goes to show there are alway unmeasured confounders out there.</p>
 <p>Some good resources on causality</p>
 <p><a href="https://matheusfacure.github.io/python-causality-handbook/landing-page.html">Causal Inference for The Brave and True</a></p>
 <p><a href="https://causalml-book.org/">Applied Causal Inference Powered by ML and AI</a></p>

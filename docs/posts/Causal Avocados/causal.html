@@ -551,13 +551,15 @@ window.Quarto = {
 </div>
 <div id="a117464f" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>X[<span class="st">'PropSmall'</span>] <span class="op">=</span> (X[<span class="st">'Small Bags'</span>] <span class="op">/</span> X[<span class="st">'Total Bags'</span>]).fillna(<span class="dv">1</span>)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>X[<span class="st">'4046'</span>] <span class="op">=</span> X[<span class="st">'4046'</span>] <span class="op">/</span> df[<span class="st">'Total Volume'</span>]</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>X[<span class="st">'4225'</span>] <span class="op">=</span> X[<span class="st">'4225'</span>] <span class="op">/</span> df[<span class="st">'Total Volume'</span>]</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>X[<span class="st">'4770'</span>] <span class="op">=</span> X[<span class="st">'4770'</span>] <span class="op">/</span> df[<span class="st">'Total Volume'</span>]</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>X[<span class="st">'month'</span>] <span class="op">=</span> pd.to_datetime(X.Date).dt.month</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> X.drop(<span class="st">'Date'</span>, axis<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> X.drop([c <span class="cf">for</span> c <span class="kw">in</span> X.columns <span class="cf">if</span> <span class="st">'Bags'</span> <span class="kw">in</span> c], axis<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>X</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Standardize PropSmall so that the ATE is centered around the mean.</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>X[<span class="st">'PropSmall'</span>] <span class="op">=</span> (X[<span class="st">'PropSmall'</span>]<span class="op">-</span>X[<span class="st">'PropSmall'</span>].mean())<span class="op">/</span>X[<span class="st">'PropSmall'</span>].std()</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>X[<span class="st">'4046'</span>] <span class="op">=</span> X[<span class="st">'4046'</span>] <span class="op">/</span> df[<span class="st">'Total Volume'</span>]</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>X[<span class="st">'4225'</span>] <span class="op">=</span> X[<span class="st">'4225'</span>] <span class="op">/</span> df[<span class="st">'Total Volume'</span>]</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>X[<span class="st">'4770'</span>] <span class="op">=</span> X[<span class="st">'4770'</span>] <span class="op">/</span> df[<span class="st">'Total Volume'</span>]</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>X[<span class="st">'month'</span>] <span class="op">=</span> pd.to_datetime(X.Date).dt.month</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> X.drop(<span class="st">'Date'</span>, axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> X.drop([c <span class="cf">for</span> c <span class="kw">in</span> X.columns <span class="cf">if</span> <span class="st">'Bags'</span> <span class="kw">in</span> c], axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>X</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="6">
 <div>
 
@@ -585,7 +587,7 @@ window.Quarto = {
 <td>conventional</td>
 <td>2015</td>
 <td>Albany</td>
-<td>0.989278</td>
+<td>0.839215</td>
 <td>12</td>
 </tr>
 <tr class="even">
@@ -596,7 +598,7 @@ window.Quarto = {
 <td>conventional</td>
 <td>2015</td>
 <td>Albany</td>
-<td>0.989744</td>
+<td>0.840850</td>
 <td>12</td>
 </tr>
 <tr class="odd">
@@ -607,7 +609,7 @@ window.Quarto = {
 <td>conventional</td>
 <td>2015</td>
 <td>Albany</td>
-<td>0.987338</td>
+<td>0.832406</td>
 <td>12</td>
 </tr>
 <tr class="even">
@@ -618,7 +620,7 @@ window.Quarto = {
 <td>conventional</td>
 <td>2015</td>
 <td>Albany</td>
-<td>0.976982</td>
+<td>0.796065</td>
 <td>12</td>
 </tr>
 <tr class="odd">
@@ -629,7 +631,7 @@ window.Quarto = {
 <td>conventional</td>
 <td>2015</td>
 <td>Albany</td>
-<td>0.968032</td>
+<td>0.764655</td>
 <td>11</td>
 </tr>
 <tr class="even">
@@ -651,7 +653,7 @@ window.Quarto = {
 <td>organic</td>
 <td>2018</td>
 <td>WestTexNewMexico</td>
-<td>0.968008</td>
+<td>0.764572</td>
 <td>2</td>
 </tr>
 <tr class="even">
@@ -662,7 +664,7 @@ window.Quarto = {
 <td>organic</td>
 <td>2018</td>
 <td>WestTexNewMexico</td>
-<td>0.964943</td>
+<td>0.753815</td>
 <td>1</td>
 </tr>
 <tr class="odd">
@@ -673,7 +675,7 @@ window.Quarto = {
 <td>organic</td>
 <td>2018</td>
 <td>WestTexNewMexico</td>
-<td>0.995496</td>
+<td>0.861037</td>
 <td>1</td>
 </tr>
 <tr class="even">
@@ -684,7 +686,7 @@ window.Quarto = {
 <td>organic</td>
 <td>2018</td>
 <td>WestTexNewMexico</td>
-<td>0.995442</td>
+<td>0.860847</td>
 <td>1</td>
 </tr>
 <tr class="odd">
@@ -695,7 +697,7 @@ window.Quarto = {
 <td>organic</td>
 <td>2018</td>
 <td>WestTexNewMexico</td>
-<td>0.997835</td>
+<td>0.869245</td>
 <td>1</td>
 </tr>
 </tbody>
@@ -796,10 +798,10 @@ window.Quarto = {
 </div>
 </div>
 <p><br><br> According to this view each <span class="math inline">\(1\%\)</span> increase in price is associated with a <span class="math inline">\(-4.7\%\)</span> drop in sales. That’s all well and good, and would be a valid conclusion if you were trying to predict volumes on a similar dataset in the future. We can’t claim a causal relationship though since we haven’t reasoned around the causal graph, confounders etc.</p>
-<p>I will assume X are counfounding factors that affect both the price and the volume sold. There are some important features that can explain both the average avocado price, and the population &amp; relative appetite for avocados.</p>
+<p>I will assume X are confounding factors that affect both the price and the volume sold. There are some important features that can explain both the average avocado price, and the population &amp; relative appetite for avocados.</p>
 <p>Now let’s assume a linear model where we include the region, avocado type and time.</p>
 <div id="2cd87acd" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> smf.ols(<span class="st">'Q("Total Volume") ~ AveragePrice + C(region) + AveragePrice*C(type) + C(year)*C(month) + PropSmall'</span>, data <span class="op">=</span> data).fit(cov_type<span class="op">=</span><span class="st">'cluster'</span>, cov_kwds<span class="op">=</span>{<span class="st">'groups'</span>: data[<span class="st">'region'</span>], <span class="st">'use_correction'</span>:<span class="va">True</span>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> smf.ols(<span class="st">'Q("Total Volume") ~ AveragePrice + C(region, Treatment(reference="TotalUS")) + AveragePrice*C(type, Treatment(reference="conventional")) + C(year)*C(month) + PropSmall'</span>, data <span class="op">=</span> data).fit(cov_type<span class="op">=</span><span class="st">'cluster'</span>, cov_kwds<span class="op">=</span>{<span class="st">'groups'</span>: data[<span class="st">'region'</span>], <span class="st">'use_correction'</span>:<span class="va">True</span>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div id="488abf1c" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Log-log price elasticity (ATE): </span><span class="sc">{</span>model<span class="sc">.</span>params[<span class="st">"AveragePrice"</span>]<span class="sc">:.2f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -817,8 +819,8 @@ window.Quarto = {
 </div>
 </div>
 </div>
-<p>With this model, controlling for confounders we instead found a <span class="math inline">\(-1.4\%\)</span> drop in sales. Turns out the previous estimate was counfounded by X. Some regions have more expensive avocados and fewer buyers as a baseline, the previous estimate doesn’t help us understand what would happen if we were to change the price in Boston. By controlling for confounders we are isolating the variance between price and sales caeteris paribus, and the causal relationship emerged.</p>
-<p>Any Data Scientist worth their salt would have included these features in a ML model anyway, the key difference is that we made a causal assumption about confounders and ruled out any mediators which lets us present this as a causal effect and not just correlation. There are other problems that can arise with applying Machine Learning to problems like this, you have to be aware of biases from regularization, overfitting and weak treatment effects ignored by the model. Linear regression automatically partials out any confounding effects, which is why it’s so suitable for causal analyses.</p>
+<p>With this model, controlling for confounders we instead found a <span class="math inline">\(-1.4\%\)</span> drop in sales. Turns out the previous estimate was confounded by X. Some regions have more expensive avocados and fewer buyers as a baseline, the previous estimate doesn’t help us understand what would happen if we were to change the price in Boston. By controlling for confounders we are isolating the variation between price and sales caeteris paribus, and the causal relationship emerged. Keep in mind this model has interactions and certain year, month, region, type as baseline, more careful analysis is needed to make sure it’s applicable to the situation of interest.</p>
+<p>Any Data Scientist worth their salt would have included these features in a ML model anyway, the key difference is that we made a causal assumption about confounders and ruled out any mediators which lets us present this as a causal effect and not just correlation. There are other problems that can arise with applying Machine Learning to problems like this, you have to be aware of biases from regularization, overfitting and weak treatment effects ignored by the model. Linear regression automatically partials out any confounding (linear) effects, which is why it’s so suitable for causal analyses.</p>
 <p>There are causal ML approaches such as metalearners and Double Machine Learning that can mitigate these flaws. Fundamentally we are no longer trying to optimize predictive power (your usual loss function), we are <em>just</em> interested in the marginal effects of the treatment on the outcome. <em>Beware of applying ML naively to these problems, the best predictor is not necessarily the best causal model</em>.</p>
 <p>For fun, let’s use these insights to set the right price depending on our wholesale avocado costs. Here’s a simulation for some different cases.</p>
 <div id="4474e2bc" class="cell" data-execution_count="14">

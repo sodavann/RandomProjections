@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/Autodiff/Autodiff.html",
       "/posts/Causal Avocados/causal.html",
       "/posts/LLMs 2025/LLMs.html",
       "/posts/Nondimensional Features/ndim.html",

@@ -38,5 +38,8 @@
   },
   "posts/Causal Avocados/causal.ipynb": {
     "causal.html": "a87e60d6"
+  },
+  "posts/Autodiff/Autodiff.ipynb": {
+    "Autodiff.html": "69b373ab"
   }
 }

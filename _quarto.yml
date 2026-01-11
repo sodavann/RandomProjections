@@ -6,6 +6,7 @@ project:
   
 website:
   title: "Random Projections"
+  site-url: "https://randomprojections.dev/"
   navbar:
     right:
       - about.qmd

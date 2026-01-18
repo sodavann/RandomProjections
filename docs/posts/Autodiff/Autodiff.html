@@ -222,7 +222,7 @@ window.Quarto = {
 <p>One of the most useful tools in modern machine learning is the ability to automatically differentiate basically anything. Using tools like Jax and torch.autograd you can differentiate through arbitrary programs with control flows, custom data containers etc. I’ll try to showcase some fun examples in this post.</p>
 <section id="differentiating-the-weierstrass-function" class="level3">
 <h3 class="anchored" data-anchor-id="differentiating-the-weierstrass-function">Differentiating the Weierstrass Function</h3>
-<p>A classic example of why analysis is tricky, the Weierstrass function is absolutely continuous but nowhere differentiable. Such a function was thought not to exist until appropriately rigorous mathematical tools were invented.</p>
+<p>A classic example of why analysis is tricky, the Weierstrass function is uniformly continuous but nowhere differentiable. Such a function was thought not to exist until appropriately rigorous mathematical tools were invented.</p>
 <p><span class="math display">\[ f(x) = \sum_{n=0}^{\infty} a^n \cos(b^n \pi x)  \]</span></p>
 <p>where <span class="math inline">\(0 &lt; a &lt; 1\)</span>, <span class="math inline">\(b \in \mathbb{Z}\)</span>, <span class="math inline">\(b\)</span> odd, <span class="math inline">\(ab &gt; 1\)</span></p>
 <p>Let’s define this function approximation in Jax and try differentiating it anyway.</p>

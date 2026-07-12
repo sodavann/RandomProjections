@@ -2,15 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://randomprojections.dev/posts/Autodiff/Autodiff.html</loc>
-    <lastmod>2026-01-18T20:49:36.266Z</lastmod>
+    <lastmod>2026-02-11T17:45:41.113Z</lastmod>
   </url>
   <url>
     <loc>https://randomprojections.dev/posts/Nondimensional Features/ndim.html</loc>
-    <lastmod>2025-07-13T14:01:53.603Z</lastmod>
+    <lastmod>2026-02-11T17:45:41.118Z</lastmod>
   </url>
   <url>
     <loc>https://randomprojections.dev/posts/Bayesian Persuasion/bn.html</loc>
-    <lastmod>2026-01-18T20:10:55.957Z</lastmod>
+    <lastmod>2026-02-11T17:45:41.114Z</lastmod>
   </url>
   <url>
     <loc>https://randomprojections.dev/about.html</loc>
@@ -18,14 +18,18 @@
   </url>
   <url>
     <loc>https://randomprojections.dev/index.html</loc>
-    <lastmod>2025-07-13T14:01:53.602Z</lastmod>
+    <lastmod>2026-02-11T17:45:41.113Z</lastmod>
   </url>
   <url>
     <loc>https://randomprojections.dev/posts/LLMs 2025/LLMs.html</loc>
-    <lastmod>2025-07-13T14:01:53.602Z</lastmod>
+    <lastmod>2026-02-11T17:45:41.115Z</lastmod>
   </url>
   <url>
     <loc>https://randomprojections.dev/posts/Causal Avocados/causal.html</loc>
-    <lastmod>2025-07-28T14:31:32.701Z</lastmod>
+    <lastmod>2026-02-11T17:45:41.115Z</lastmod>
+  </url>
+  <url>
+    <loc>https://randomprojections.dev/posts/Estimators/estimators.html</loc>
+    <lastmod>2026-05-31T21:28:56.629Z</lastmod>
   </url>
 </urlset>

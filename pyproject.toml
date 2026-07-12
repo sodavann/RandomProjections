@@ -8,4 +8,8 @@ dependencies = [
     "ipykernel>=7.1.0",
     "ipython>=9.9.0",
     "jupyter>=1.1.1",
+    "matplotlib>=3.10.8",
+    "pandas>=3.0.0",
+    "quarto-cli>=1.8.27",
+    "statsmodels>=0.14.6",
 ]

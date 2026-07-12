@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.8.27">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -69,14 +69,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <meta name="quarto:offset" content="../../">
 <script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-ca8f28f2ca4f805a4f13c5a685d9646e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-7a5a405e9d1d3f9f5cacb08c496ac193.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -119,7 +120,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -250,7 +251,7 @@ window.Quarto = {
 <p><span class="math display">\[\log{p(\theta|x)} \propto \log{p(x|\theta)} + \log{p(\theta)}\]</span></p>
 <p>Let’s generate some data <span class="math inline">\(x = \sqrt{t} + \epsilon\)</span>.</p>
 <div id="cell-7" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">123</span>)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
@@ -266,7 +267,7 @@ window.Quarto = {
 <span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(x<span class="op">=</span>t, y<span class="op">=</span>x)<span class="op">;</span></span>
 <span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Generated data"</span>)<span class="op">;</span></span>
 <span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"t"</span>)<span class="op">;</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"x"</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"x"</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -280,7 +281,7 @@ window.Quarto = {
 <p>We will also assume the likelihood <span class="math inline">\(p(x(t)| \theta) \sim N(\theta t,1)\)</span> according to our linear model.</p>
 <p>Next we want to define the log probabilities of <span class="math inline">\(p(x | \theta)\)</span> and <span class="math inline">\(p(\theta)\)</span>: our likelihood and prior respectively.</p>
 <div id="cell-9" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> lm(theta, t):</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> lm(theta, t):</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># our linear model</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> theta<span class="op">*</span>t</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -292,11 +293,11 @@ window.Quarto = {
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> logprob_norm(theta, mu, sigma)</span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> logprob_likelihood(x, theta, t,  sigma<span class="op">=</span><span class="dv">1</span>):</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> logprob_norm(x, lm(theta, t), sigma)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> logprob_norm(x, lm(theta, t), sigma)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Now how do we sample from the posterior <span class="math inline">\(p(\theta | x)\)</span> given these unnormalized log probabilities? There are many sophisticated ways to do this including HMC and SVI, but here we’ll use the Gumbel max trick.</p>
 <div id="cell-11" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>N_samples<span class="op">=</span><span class="dv">10000</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>N_samples<span class="op">=</span><span class="dv">10000</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>log_posteriors <span class="op">=</span> []</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>thetas <span class="op">=</span> []</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -322,12 +323,12 @@ window.Quarto = {
 <span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># use standard gumbel variables to sample from theta based on the log probs</span></span>
 <span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    gumbels<span class="op">=</span>np.random.gumbel(<span class="dv">0</span>,<span class="dv">1</span>,N_samples)</span>
 <span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    theta_ind<span class="op">=</span>np.argmax(log_posteriors <span class="op">+</span> gumbels)</span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    posterior_samples.append(thetas[theta_ind])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    posterior_samples.append(thetas[theta_ind])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div id="cell-12" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>sns.histplot(posterior_samples, bins<span class="op">=</span><span class="dv">30</span>, stat<span class="op">=</span> <span class="st">"probability"</span>)<span class="op">;</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>sns.histplot(posterior_samples, bins<span class="op">=</span><span class="dv">30</span>, stat<span class="op">=</span> <span class="st">"probability"</span>)<span class="op">;</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="vs">r"posterior </span><span class="dv">$</span><span class="vs">p</span><span class="kw">(</span><span class="ch">\t</span><span class="vs">heta</span><span class="dv">$</span><span class="cf">|</span><span class="vs">x</span><span class="kw">)</span><span class="vs">"</span>)<span class="op">;</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="vs">r"</span><span class="dv">$</span><span class="ch">\t</span><span class="vs">heta</span><span class="dv">$</span><span class="vs">"</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="vs">r"</span><span class="dv">$</span><span class="ch">\t</span><span class="vs">heta</span><span class="dv">$</span><span class="vs">"</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -337,21 +338,21 @@ window.Quarto = {
 </div>
 </div>
 <div id="cell-13" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>mu<span class="op">=</span>np.mean(posterior_samples)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>mu<span class="op">=</span>np.mean(posterior_samples)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>std<span class="op">=</span>np.std(posterior_samples)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>mu,std</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>mu,std</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="5">
 <pre><code>(0.38109701571399685, 0.017641487193737412)</code></pre>
 </div>
 </div>
 <div id="cell-14" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(x<span class="op">=</span>t, y<span class="op">=</span>x)<span class="op">;</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(x<span class="op">=</span>t, y<span class="op">=</span>x)<span class="op">;</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>sns.lineplot(x<span class="op">=</span>t, y<span class="op">=</span>mu<span class="op">*</span>t)<span class="op">;</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>sns.lineplot(x<span class="op">=</span>t, y<span class="op">=</span>(mu<span class="op">-</span>std)<span class="op">*</span>t, color<span class="op">=</span><span class="st">'k'</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)<span class="op">;</span></span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>sns.lineplot(x<span class="op">=</span>t, y<span class="op">=</span>(mu<span class="op">+</span>std)<span class="op">*</span>t, color<span class="op">=</span><span class="st">'k'</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)<span class="op">;</span></span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="vs">r"x</span><span class="kw">(</span><span class="vs">t</span><span class="kw">)</span><span class="vs"> mean ± std"</span>)<span class="op">;</span></span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"t"</span>)<span class="op">;</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"x"</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"x"</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -366,10 +367,10 @@ window.Quarto = {
 <p>We’re essentially looking for the probability of the mean of <span class="math inline">\(\tilde{x}\)</span> given all our data x by sampling <span class="math inline">\(\theta\)</span> from the posterior.</p>
 <p>For example <span class="math inline">\(\tilde{x}(t=4).\)</span></p>
 <div id="cell-16" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>posterior_predictive_samples<span class="op">=</span>[lm(theta, <span class="dv">4</span>) <span class="cf">for</span> theta <span class="kw">in</span> posterior_samples]</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>posterior_predictive_samples<span class="op">=</span>[lm(theta, <span class="dv">4</span>) <span class="cf">for</span> theta <span class="kw">in</span> posterior_samples]</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>sns.histplot(posterior_predictive_samples, bins<span class="op">=</span><span class="dv">30</span>, stat<span class="op">=</span><span class="st">"probability"</span>)<span class="op">;</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="vs">r"</span><span class="dv">$\m</span><span class="vs">athbf{E}</span><span class="pp">[</span><span class="ch">\t</span><span class="pp">ilde{x}(t=4)|</span><span class="ch">\t</span><span class="pp">heta]</span><span class="dv">$</span><span class="vs">"</span>)<span class="op">;</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="vs">r"</span><span class="dv">$</span><span class="ch">\t</span><span class="vs">ilde{x}</span><span class="kw">(</span><span class="vs">t=4</span><span class="kw">)</span><span class="dv">$</span><span class="vs">"</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="vs">r"</span><span class="dv">$</span><span class="ch">\t</span><span class="vs">ilde{x}</span><span class="kw">(</span><span class="vs">t=4</span><span class="kw">)</span><span class="dv">$</span><span class="vs">"</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -384,16 +385,16 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="machine-learning-problem">Machine Learning Problem</h2>
 <p>Let’s explore the NN mentioned in the beginning, we define a model in Flax NNX and minimize the MSE.</p>
 <div id="cell-20" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> jax</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> jax</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> jax.numpy <span class="im">as</span> jnp</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> flax <span class="im">import</span> nnx</span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> jax.random <span class="im">import</span> PRNGKey</span>
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> optax</span>
 <span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div id="cell-21" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> NN(nnx.Module):</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> NN(nnx.Module):</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, dim_in<span class="op">=</span><span class="dv">1</span>, dim_out<span class="op">=</span><span class="dv">1</span>,  n_hidden <span class="op">=</span> <span class="dv">3</span>, act <span class="op">=</span> nnx.sigmoid, <span class="op">*</span>, key):</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.act <span class="op">=</span> act</span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>        keys <span class="op">=</span> jax.random.split(key, <span class="dv">3</span>)</span>
@@ -419,41 +420,41 @@ window.Quarto = {
 <span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a><span class="at">@nnx.jit</span></span>
 <span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> loss_fn(model, t, x):</span>
 <span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> model(t)</span>
-<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> jnp.mean((x<span class="op">-</span>y)<span class="op">**</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> jnp.mean((x<span class="op">-</span>y)<span class="op">**</span><span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div id="cell-22" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>key<span class="op">=</span>PRNGKey(<span class="dv">42</span>)</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> NN(key<span class="op">=</span>key)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>key<span class="op">=</span>PRNGKey(<span class="dv">42</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> NN(key<span class="op">=</span>key)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div id="cell-23" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>lr<span class="op">=</span><span class="fl">1e-2</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>lr<span class="op">=</span><span class="fl">1e-2</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> nnx.Optimizer(model, optax.adam(lr))</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>metrics <span class="op">=</span> nnx.MultiMetric(</span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  loss<span class="op">=</span>nnx.metrics.Average(<span class="st">'loss'</span>),</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div id="cell-24" class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="at">@nnx.jit</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="at">@nnx.jit</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train_step(model, optimizer, metrics, t, x):</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="co">"""Train for a single step."""</span></span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  grad_fn <span class="op">=</span> nnx.value_and_grad(loss_fn)</span>
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  loss, grads <span class="op">=</span> grad_fn(model, t, x)</span>
 <span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  metrics.update(loss<span class="op">=</span>loss)</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  optimizer.update(grads)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  optimizer.update(grads)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div id="cell-25" class="cell" data-execution_count="13">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1000</span>):</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    train_step(model, optimizer, metrics, jnp.expand_dims(t,<span class="op">-</span><span class="dv">1</span>), jnp.expand_dims(x,<span class="op">-</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1000</span>):</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    train_step(model, optimizer, metrics, jnp.expand_dims(t,<span class="op">-</span><span class="dv">1</span>), jnp.expand_dims(x,<span class="op">-</span><span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div id="cell-26" class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>x_hat<span class="op">=</span>model(jnp.expand_dims(t,<span class="op">-</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>x_hat<span class="op">=</span>model(jnp.expand_dims(t,<span class="op">-</span><span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div id="cell-27" class="cell" data-execution_count="15">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(x<span class="op">=</span>t, y<span class="op">=</span>x)<span class="op">;</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(x<span class="op">=</span>t, y<span class="op">=</span>x)<span class="op">;</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>sns.lineplot(x<span class="op">=</span>t, y<span class="op">=</span>x_hat.reshape(<span class="op">-</span><span class="dv">1</span>))<span class="op">;</span></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"NN predictions"</span>)<span class="op">;</span></span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"t"</span>)<span class="op">;</span></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="vs">r"</span><span class="dv">$</span><span class="vs">f_{</span><span class="ch">\t</span><span class="vs">heta}</span><span class="kw">(</span><span class="vs">t</span><span class="kw">)</span><span class="dv">$</span><span class="vs">"</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="vs">r"</span><span class="dv">$</span><span class="vs">f_{</span><span class="ch">\t</span><span class="vs">heta}</span><span class="kw">(</span><span class="vs">t</span><span class="kw">)</span><span class="dv">$</span><span class="vs">"</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -482,14 +483,14 @@ window.Quarto = {
 <p>We learned that the standard neural network has a Bayesian interpretation, but something is missing. We didn’t manage to sample from our posterior <span class="math inline">\(p(\theta | x)\)</span>, we just found a point estimate of <span class="math inline">\(\theta\)</span>. In order to be fully Bayesian we’d like to average over this posterior distribution when predicting new values.</p>
 <p>Drawing samples from the posterior is a difficult problem in general, the standard way is to sample using MCMC (typically HMC) or SVI. These samplers can be found in a variety of packages and part of excellent PPLs like Numpyro, PYMC and Turing.jl. Here we will try out a NUTS sampler from the Blackjax package.</p>
 <div id="cell-32" class="cell" data-execution_count="16">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>data<span class="op">=</span>(jnp.expand_dims(t,<span class="op">-</span><span class="dv">1</span>), jnp.expand_dims(x,<span class="op">-</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>data<span class="op">=</span>(jnp.expand_dims(t,<span class="op">-</span><span class="dv">1</span>), jnp.expand_dims(x,<span class="op">-</span><span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div id="cell-33" class="cell" data-execution_count="17">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>logprob_norm_jax <span class="op">=</span> jax.scipy.stats.norm.logpdf</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>logprob_norm_jax <span class="op">=</span> jax.scipy.stats.norm.logpdf</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>We’ll use the arbitrary priors <span class="math inline">\(p(\theta_i) \sim N(0,100)\)</span> on the neural network parameters. This is a very uninformative prior that will most likely cause numerical instability for more complex models and data. The prior log likelihood is proportional to <span class="math inline">\(1/\sigma^2\)</span>, in this case roughly equivalent to a <span class="math inline">\(L_2\)</span>-regularization parameter <span class="math inline">\(\beta \approx\)</span> 1e-4.</p>
 <div id="cell-35" class="cell" data-execution_count="18">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="at">@jax.jit</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="at">@jax.jit</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> logprior_fn(params):</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    leaves, _ <span class="op">=</span> jax.tree_util.tree_flatten(params)</span>
 <span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    flat_params <span class="op">=</span> jnp.concatenate([jnp.ravel(a) <span class="cf">for</span> a <span class="kw">in</span> leaves])</span>
@@ -502,60 +503,60 @@ window.Quarto = {
 <span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="at">@jax.jit</span></span>
 <span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> logdensity_fn(params):</span>
-<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> logprior_fn(params) <span class="op">+</span> loglikelihood_fn(params, data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> logprior_fn(params) <span class="op">+</span> loglikelihood_fn(params, data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div id="cell-36" class="cell" data-execution_count="19">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> blackjax</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> blackjax</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>rng_key <span class="op">=</span> PRNGKey(<span class="dv">0</span>)</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>rng_key, rng_subkey <span class="op">=</span> jax.random.split(rng_key)</span>
 <span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>num_warmup <span class="op">=</span> <span class="dv">10000</span></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>num_samples <span class="op">=</span> <span class="dv">5000</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>num_samples <span class="op">=</span> <span class="dv">5000</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div id="cell-37" class="cell" data-execution_count="20">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> NN(act<span class="op">=</span>nnx.sigmoid ,key<span class="op">=</span>rng_key)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> NN(act<span class="op">=</span>nnx.sigmoid ,key<span class="op">=</span>rng_key)</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>state <span class="op">=</span> nnx.state(model)</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>param <span class="op">=</span> state.<span class="bu">filter</span>(nnx.Param)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>param <span class="op">=</span> state.<span class="bu">filter</span>(nnx.Param)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div id="cell-38" class="cell" data-execution_count="21">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>adapt <span class="op">=</span> blackjax.window_adaptation(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>adapt <span class="op">=</span> blackjax.window_adaptation(</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    blackjax.nuts, logdensity_fn, target_acceptance_rate<span class="op">=</span><span class="fl">0.8</span></span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>rng_key, warmup_key <span class="op">=</span> jax.random.split(rng_key)</span>
 <span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="co"># warm up the model in order to reach equilibrium</span></span>
 <span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>(last_state, parameters), _ <span class="op">=</span> adapt.run(warmup_key, param, num_warmup)</span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>kernel <span class="op">=</span> blackjax.nuts(logdensity_fn, <span class="op">**</span>parameters).step</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>kernel <span class="op">=</span> blackjax.nuts(logdensity_fn, <span class="op">**</span>parameters).step</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div id="cell-39" class="cell" data-execution_count="22">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>keys <span class="op">=</span> jax.random.split(rng_key, num_samples)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>keys <span class="op">=</span> jax.random.split(rng_key, num_samples)</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> step_fn(key, state):</span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> kernel(key, state)</span>
 <span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="co"># sample</span></span>
 <span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>s, info <span class="op">=</span> jax.vmap(step_fn,in_axes<span class="op">=</span>(<span class="dv">0</span>, <span class="va">None</span>))(keys, last_state)</span>
 <span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>posterior_params <span class="op">=</span> s.position</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>posterior_params <span class="op">=</span> s.position</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div id="cell-40" class="cell" data-execution_count="23">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> eval_fn(params, t):</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> model.<span class="bu">apply</span>(params, jnp.expand_dims(t,<span class="op">-</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> eval_fn(params, t):</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> model.<span class="bu">apply</span>(params, jnp.expand_dims(t,<span class="op">-</span><span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div id="cell-41" class="cell" data-execution_count="24">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># apply model with weights sampled from the posterior distribution, e.g. draw x from the posterior predictive</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># apply model with weights sampled from the posterior distribution, e.g. draw x from the posterior predictive</span></span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>res <span class="op">=</span> jax.vmap(eval_fn, in_axes<span class="op">=</span>(<span class="dv">0</span>, <span class="va">None</span>))(posterior_params, t).squeeze()</span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="co"># predict out of sample</span></span>
 <span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>t_oos<span class="op">=</span>jnp.arange(<span class="dv">0</span>,<span class="dv">20</span>,<span class="fl">.1</span>)</span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>res_oos <span class="op">=</span> jax.vmap(eval_fn, in_axes<span class="op">=</span>(<span class="dv">0</span>, <span class="va">None</span>))(posterior_params, t_oos).squeeze()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>res_oos <span class="op">=</span> jax.vmap(eval_fn, in_axes<span class="op">=</span>(<span class="dv">0</span>, <span class="va">None</span>))(posterior_params, t_oos).squeeze()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Here we’ve taken posterior samples of the neural network parameters <span class="math inline">\(\theta\)</span> and evaluated the model with them, collecting the different outputs. This yields samples of the model’s mean prediction given <span class="math inline">\(\theta\)</span> from the posterior.</p>
 <p>It is also possible to sample from the full posterior predictive distribution by including the aleatoric uncertainty from the likelihood <span class="math inline">\(\sigma\)</span>, but we’ll stick with the mean prediction. You can also estimate <span class="math inline">\(\sigma\)</span>, here we arbitrarily set it to <span class="math inline">\(\sigma=0.5\)</span>. If this is your goal I would recommend using a PPL.</p>
 <div id="cell-43" class="cell" data-execution_count="25">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>df_res<span class="op">=</span>pd.DataFrame(res).T</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>df_oos<span class="op">=</span>pd.DataFrame(res_oos).T</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>df_res<span class="op">=</span>pd.DataFrame(res).T</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>df_oos<span class="op">=</span>pd.DataFrame(res_oos).T</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div id="cell-44" class="cell" data-execution_count="26">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>means<span class="op">=</span>df_res.mean(axis<span class="op">=</span><span class="dv">1</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>means<span class="op">=</span>df_res.mean(axis<span class="op">=</span><span class="dv">1</span>)</span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>stds <span class="op">=</span> df_res.std(axis<span class="op">=</span><span class="dv">1</span>)</span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(x <span class="op">=</span> t, y <span class="op">=</span> x)<span class="op">;</span></span>
@@ -564,7 +565,7 @@ window.Quarto = {
 <span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>sns.lineplot(x <span class="op">=</span> t, y <span class="op">=</span> means <span class="op">-</span> stds, color<span class="op">=</span><span class="st">"k"</span>, alpha<span class="op">=</span><span class="fl">0.3</span>)<span class="op">;</span></span>
 <span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="vs">r"BNN mean ± std"</span>)<span class="op">;</span></span>
 <span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"t"</span>)<span class="op">;</span></span>
-<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="vs">r"</span><span class="dv">$</span><span class="vs">f_{</span><span class="ch">\t</span><span class="vs">heta}</span><span class="kw">(</span><span class="vs">t</span><span class="kw">)</span><span class="dv">$</span><span class="vs">"</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="vs">r"</span><span class="dv">$</span><span class="vs">f_{</span><span class="ch">\t</span><span class="vs">heta}</span><span class="kw">(</span><span class="vs">t</span><span class="kw">)</span><span class="dv">$</span><span class="vs">"</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -574,7 +575,7 @@ window.Quarto = {
 </div>
 </div>
 <div id="cell-45" class="cell" data-execution_count="27">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>means<span class="op">=</span>df_oos.mean(axis<span class="op">=</span><span class="dv">1</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>means<span class="op">=</span>df_oos.mean(axis<span class="op">=</span><span class="dv">1</span>)</span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>stds <span class="op">=</span> df_oos.std(axis<span class="op">=</span><span class="dv">1</span>)</span>
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>sns.lineplot(x<span class="op">=</span>t_oos, y<span class="op">=</span>means)<span class="op">;</span></span>
@@ -585,7 +586,7 @@ window.Quarto = {
 <span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="vs">r"BNN mean ± std out of sample"</span>)<span class="op">;</span></span>
 <span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"t"</span>)<span class="op">;</span></span>
 <span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="vs">r"</span><span class="dv">$</span><span class="vs">f_{</span><span class="ch">\t</span><span class="vs">heta}</span><span class="kw">(</span><span class="vs">t</span><span class="kw">)</span><span class="dv">$</span><span class="vs">"</span>)<span class="op">;</span></span>
-<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>plt.legend([<span class="st">"BNN mean"</span>, <span class="st">"Truth"</span>, <span class="vs">r"</span><span class="dv">$\s</span><span class="vs">igma</span><span class="dv">$</span><span class="vs"> credible intervals"</span>])<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>plt.legend([<span class="st">"BNN mean"</span>, <span class="st">"Truth"</span>, <span class="vs">r"</span><span class="dv">$\s</span><span class="vs">igma</span><span class="dv">$</span><span class="vs"> credible intervals"</span>])<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -657,13 +658,14 @@ window.Quarto = {
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

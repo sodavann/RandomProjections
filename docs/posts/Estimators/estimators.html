@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="lta">
-<meta name="dcterms.date" content="2026-03-01">
+<meta name="dcterms.date" content="2026-07-16">
 
 <title>Useful Bits About Estimators – Random Projections</title>
 <style>
@@ -202,7 +202,7 @@ window.Quarto = {
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">March 1, 2026</p>
+        <p class="date">July 16, 2026</p>
       </div>
     </div>
     
@@ -233,17 +233,18 @@ window.Quarto = {
 </blockquote>
 <p>If <span class="math inline">\(X \sim \mathcal{N}(0,1)\)</span> find <span class="math inline">\(P(X&gt;10)\)</span>. Sampling from the standard normal is of course easy, but we would quickly notice that we would record vanishingly few samples above 10. So instead we sample from a shifted exponential <span class="math inline">\(Z \sim \text{Exp}(1)\)</span> with importance sampling.</p>
 <p><span class="math display">\[P(X&gt;10) = \mathbb{E}_\mathcal{N}[\mathbb{1}_{X&gt;10}] = \mathbb{E}_{\text{Exp}}[\frac{e^{-\frac{(Z+10)^2}{2}}}{\sqrt{2 \pi} e^{-Z}}] = \mathbb{E}_{\text{Exp}}[\frac{e^{Z-\frac{(Z+10)^2}{2}}}{\sqrt{2 \pi}}].\]</span></p>
-<div id="20a14c6e" class="cell" data-execution_count="1">
+<div id="20a14c6e" class="cell" data-execution_count="30">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">0</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">123</span>)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy <span class="im">as</span> sp</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>N<span class="op">=</span> <span class="dv">100_000</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>z <span class="op">=</span> np.random.exponential(<span class="dv">1</span>,N)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>f <span class="op">=</span> np.exp(z <span class="op">-</span> <span class="fl">0.5</span> <span class="op">*</span> (z<span class="op">+</span><span class="dv">10</span>)<span class="op">**</span><span class="dv">2</span> <span class="op">-</span> <span class="fl">0.5</span> <span class="op">*</span> np.log(<span class="dv">2</span> <span class="op">*</span> np.pi))</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.<span class="bu">abs</span>(np.mean(f) <span class="op">/</span>sp.stats.norm.sf(<span class="dv">10</span>)<span class="op">-</span><span class="dv">1</span>)<span class="op">&lt;</span><span class="fl">0.05</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"mean: </span><span class="sc">{</span>np<span class="sc">.</span>mean(f)<span class="sc">:.2e}</span><span class="ss">, std: </span><span class="sc">{</span>np<span class="sc">.</span>std(f)<span class="sc">:.2e}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>N<span class="op">=</span> <span class="dv">1_000_000</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>mu_f <span class="op">=</span> sp.stats.norm.sf(<span class="dv">10</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>z <span class="op">=</span> np.random.exponential(<span class="dv">1</span>,N)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>f <span class="op">=</span> np.exp(z <span class="op">-</span> <span class="fl">0.5</span> <span class="op">*</span> (z<span class="op">+</span><span class="dv">10</span>)<span class="op">**</span><span class="dv">2</span> <span class="op">-</span> <span class="fl">0.5</span> <span class="op">*</span> np.log(<span class="dv">2</span> <span class="op">*</span> np.pi))</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.<span class="bu">abs</span>(np.mean(f)<span class="op">/</span>mu_f <span class="op">-</span><span class="dv">1</span>)<span class="op">&lt;</span><span class="fl">0.05</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"mean: </span><span class="sc">{</span>np<span class="sc">.</span>mean(f)<span class="sc">:.2e}</span><span class="ss">, std: </span><span class="sc">{</span>np<span class="sc">.</span>std(f)<span class="sc">:.2e}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>mean: 7.66e-24, std: 1.59e-23</code></pre>
+<pre><code>mean: 7.60e-24, std: 1.58e-23</code></pre>
 </div>
 </div>
 <p>Variance is quite high for this estimator, but if the alternative is to draw &gt;&gt; <span class="math inline">\(10^{24}\)</span> samples…</p>
@@ -263,27 +264,29 @@ window.Quarto = {
 <p>If we want to estimate <span class="math inline">\(\mathbb{E}[f(X)]\)</span> and have another correlated r.v. <span class="math inline">\(h(X)\)</span> available with known mean <span class="math inline">\(\mu_h = \mathbb{E}[h(X)]\)</span>, we can construct an unbiased estimator as <span class="math display">\[\mathbb{E}[\tilde{f}(X)] =  \mathbb{E}[f(X) + \theta (h(X) - \mu_h)].\]</span> This estimator has variance <span class="math display">\[\mathbb{V}[\tilde{f}(X)]=\mathbb{V}[{f}(X)] + \theta^2\mathbb{V}[{h}(X)] + 2\theta \text{Cov}({f}(X), {h}(X)).\]</span></p>
 <p>With minimal variance at <span class="math inline">\(\theta^* = -\frac{\text{Cov}({f}(X), {h}(X))}{\mathbb{V}[{h}(X)]}.\)</span></p>
 <p>The maximal variance reduction is <span class="math inline">\(\frac{\mathbb{V}[{\tilde{f}}(X)]}{\mathbb{V}[{f}(X)]} = 1- \rho^2(f,h).\)</span></p>
-<p>Let’s get back to <span class="math inline">\(P(X&gt;10)\)</span> and try to decrease the variance. I think a good control variate would be <span class="math inline">\(h = \log(Z)\)</span>, with mean <span class="math inline">\(\mathbb{E}[\log(Z)] = -\gamma\)</span> <a href="https://en.wikipedia.org/wiki/Euler%27s_constant#Integrals">The Euler-Mascheroni constant</a>. Let me know if you can find a better control variate!</p>
-<div id="35e42f89" class="cell" data-execution_count="2">
+<p>Let’s get back to <span class="math inline">\(P(X&gt;10)\)</span> and try to decrease the variance. I think a good control variate would be <span class="math inline">\(h = \log(Z)\)</span>, with mean <span class="math inline">\(\mathbb{E}[\log(Z)] = -\gamma\)</span> <a href="https://en.wikipedia.org/wiki/Euler%27s_constant#Integrals">The Euler-Mascheroni constant</a>.</p>
+<div id="35e42f89" class="cell" data-execution_count="31">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.regression.linear_model <span class="im">import</span> OLS</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>h <span class="op">=</span> np.log(z)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimate optimal theta</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>theta <span class="op">=</span> <span class="op">-</span>OLS(f,h).fit().params[<span class="dv">0</span>]</span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>mu_h <span class="op">=</span> <span class="op">-</span>np.euler_gamma</span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>f_cv <span class="op">=</span> f <span class="op">+</span> theta <span class="op">*</span> (h<span class="op">-</span>mu_h)</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.<span class="bu">abs</span>(np.mean(f_cv) <span class="op">/</span>sp.stats.norm.sf(<span class="dv">10</span>)<span class="op">-</span><span class="dv">1</span>)<span class="op">&lt;</span><span class="fl">0.05</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> np.<span class="bu">abs</span>(np.mean(f_cv)<span class="op">/</span>mu_f<span class="op">-</span><span class="dv">1</span>)<span class="op">&lt;</span><span class="fl">0.05</span></span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"mean: </span><span class="sc">{</span>np<span class="sc">.</span>mean(f_cv)<span class="sc">:.2e}</span><span class="ss">, std: </span><span class="sc">{</span>np<span class="sc">.</span>std(f_cv)<span class="sc">:.2e}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>mean: 7.64e-24, std: 7.90e-24</code></pre>
+<pre><code>mean: 7.61e-24, std: 7.90e-24</code></pre>
 </div>
 </div>
-<div id="2c6bd7a1" class="cell" data-execution_count="3">
+<div id="2c6bd7a1" class="cell" data-execution_count="32">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>plt.rc(<span class="st">"figure"</span>, figsize<span class="op">=</span> (<span class="dv">12</span>,<span class="dv">8</span>))</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>sns.kdeplot(f, label<span class="op">=</span><span class="st">"original"</span>)</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>sns.kdeplot(f_cv, label<span class="op">=</span><span class="st">"CV"</span>)</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>plt.legend()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>sns.histplot(f, label<span class="op">=</span><span class="st">"original"</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>sns.histplot(f_cv, label<span class="op">=</span><span class="st">"CV"</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>plt.axvline(mu_f, label<span class="op">=</span><span class="st">"mean"</span>, color<span class="op">=</span><span class="st">"black"</span>, linestyle<span class="op">=</span><span class="st">"dashed"</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>plt.xlim([<span class="op">-</span><span class="fl">1e-23</span>, <span class="fl">3e-23</span>])</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>plt.legend()<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -310,7 +313,7 @@ window.Quarto = {
 <p>We’re interested in the ATE of treatment <span class="math inline">\(T\)</span> on the outcome <span class="math inline">\(Y\)</span> under confounding. If we can’t measure confounders, IPW and DR are off the table. Another approach that rests on very different assumptions is IV. If we have another r.v. <span class="math inline">\(Z\)</span> that acts on the treatment, has no direct effect on the outcome except through its action on the treatment and is not confounded with treatment or outcome, we can estimate the ATE without controlling for confounders at all.</p>
 <p><span class="math display">\[\frac{dY}{\partial z} = \frac{\partial Y}{\partial t} \frac{\partial t}{\partial z} + \frac{\partial Y}{\partial z}\]</span> <span class="math display">\[\frac{\partial Y}{\partial z} = 0 \implies \frac{\partial Y}{\partial t} = \frac{\frac{d Y}{\partial z}}{\frac{\partial t}{\partial z}}\]</span></p>
 <p>The numerator can be estimated using a linear regression of <span class="math inline">\(Y\)</span> on <span class="math inline">\(Z\)</span> (there is no direct effect by assumption, the regression coefficient measures the total derivative through <span class="math inline">\(T\)</span>), the denominator by a regression of <span class="math inline">\(T\)</span> on <span class="math inline">\(Z\)</span> (the direct effect).</p>
-<p>This post has glossed over so many important caveats I’m almost ashamed to publish it. If this piques your interest or you’re wondering why all the fuss about counterfactual estimation, I recommend <a href="https://miguelhernan.org/whatifbook">Causal Inference: What If</a> and <a href="https://xcelab.net/rm/">Statistical Rethinking</a>.</p>
+<p>This post has glossed over <em>many</em> important caveats and is really just a caption of my own learning journey. If this piques your interest or you’re wondering why all the fuss about counterfactual estimation, I recommend <a href="https://miguelhernan.org/whatifbook">Causal Inference: What If</a> and <a href="https://xcelab.net/rm/">Statistical Rethinking</a>.</p>
 
 
 </section>

@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://randomprojections.dev/posts/Autodiff/Autodiff.html</loc>
-    <lastmod>2026-02-11T17:45:41.113Z</lastmod>
-  </url>
-  <url>
-    <loc>https://randomprojections.dev/posts/Nondimensional Features/ndim.html</loc>
-    <lastmod>2026-02-11T17:45:41.118Z</lastmod>
-  </url>
-  <url>
-    <loc>https://randomprojections.dev/posts/Bayesian Persuasion/bn.html</loc>
-    <lastmod>2026-02-11T17:45:41.114Z</lastmod>
-  </url>
-  <url>
-    <loc>https://randomprojections.dev/about.html</loc>
-    <lastmod>2025-07-13T14:01:53.598Z</lastmod>
-  </url>
-  <url>
-    <loc>https://randomprojections.dev/index.html</loc>
-    <lastmod>2026-02-11T17:45:41.113Z</lastmod>
+    <loc>https://randomprojections.dev/posts/Estimators/estimators.html</loc>
+    <lastmod>2026-07-16T14:20:58.221Z</lastmod>
   </url>
   <url>
     <loc>https://randomprojections.dev/posts/LLMs 2025/LLMs.html</loc>
     <lastmod>2026-02-11T17:45:41.115Z</lastmod>
   </url>
   <url>
+    <loc>https://randomprojections.dev/posts/Bayesian Persuasion/bn.html</loc>
+    <lastmod>2026-02-11T17:45:41.114Z</lastmod>
+  </url>
+  <url>
+    <loc>https://randomprojections.dev/index.html</loc>
+    <lastmod>2026-02-11T17:45:41.113Z</lastmod>
+  </url>
+  <url>
+    <loc>https://randomprojections.dev/about.html</loc>
+    <lastmod>2026-02-11T17:45:41.107Z</lastmod>
+  </url>
+  <url>
+    <loc>https://randomprojections.dev/posts/Autodiff/Autodiff.html</loc>
+    <lastmod>2026-02-11T17:45:41.113Z</lastmod>
+  </url>
+  <url>
     <loc>https://randomprojections.dev/posts/Causal Avocados/causal.html</loc>
     <lastmod>2026-02-11T17:45:41.115Z</lastmod>
   </url>
   <url>
-    <loc>https://randomprojections.dev/posts/Estimators/estimators.html</loc>
-    <lastmod>2026-07-13T09:59:53.584Z</lastmod>
+    <loc>https://randomprojections.dev/posts/Nondimensional Features/ndim.html</loc>
+    <lastmod>2026-02-11T17:45:41.118Z</lastmod>
   </url>
 </urlset>

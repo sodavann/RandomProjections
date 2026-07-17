@@ -233,7 +233,7 @@ window.Quarto = {
 </blockquote>
 <p>If <span class="math inline">\(X \sim \mathcal{N}(0,1)\)</span> find <span class="math inline">\(P(X&gt;10)\)</span>. Sampling from the standard normal is of course easy, but we would quickly notice that we would record vanishingly few samples above 10. So instead we sample from a shifted exponential <span class="math inline">\(Z \sim \text{Exp}(1)\)</span> with importance sampling.</p>
 <p><span class="math display">\[P(X&gt;10) = \mathbb{E}_\mathcal{N}[\mathbb{1}_{X&gt;10}] = \mathbb{E}_{\text{Exp}}[\frac{e^{-\frac{(Z+10)^2}{2}}}{\sqrt{2 \pi} e^{-Z}}] = \mathbb{E}_{\text{Exp}}[\frac{e^{Z-\frac{(Z+10)^2}{2}}}{\sqrt{2 \pi}}].\]</span></p>
-<div id="20a14c6e" class="cell" data-execution_count="30">
+<div id="20a14c6e" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">123</span>)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy <span class="im">as</span> sp</span>
@@ -265,7 +265,7 @@ window.Quarto = {
 <p>With minimal variance at <span class="math inline">\(\theta^* = -\frac{\text{Cov}({f}(X), {h}(X))}{\mathbb{V}[{h}(X)]}.\)</span></p>
 <p>The maximal variance reduction is <span class="math inline">\(\frac{\mathbb{V}[{\tilde{f}}(X)]}{\mathbb{V}[{f}(X)]} = 1- \rho^2(f,h).\)</span></p>
 <p>Let’s get back to <span class="math inline">\(P(X&gt;10)\)</span> and try to decrease the variance. I think a good control variate would be <span class="math inline">\(h = \log(Z)\)</span>, with mean <span class="math inline">\(\mathbb{E}[\log(Z)] = -\gamma\)</span> <a href="https://en.wikipedia.org/wiki/Euler%27s_constant#Integrals">The Euler-Mascheroni constant</a>.</p>
-<div id="35e42f89" class="cell" data-execution_count="31">
+<div id="35e42f89" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> statsmodels.regression.linear_model <span class="im">import</span> OLS</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>h <span class="op">=</span> np.log(z)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Estimate optimal theta</span></span>
@@ -278,7 +278,7 @@ window.Quarto = {
 <pre><code>mean: 7.61e-24, std: 7.90e-24</code></pre>
 </div>
 </div>
-<div id="2c6bd7a1" class="cell" data-execution_count="32">
+<div id="2c6bd7a1" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>plt.rc(<span class="st">"figure"</span>, figsize<span class="op">=</span> (<span class="dv">12</span>,<span class="dv">8</span>))</span>
@@ -301,7 +301,7 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="doubly-robust-estimators">Doubly Robust Estimators</h3>
 <p>Like CUPED these are relevant to causal estimands, for example the Conditional Average Treatment Effect <span class="math inline">\(\mathbb{E}[Y^1 - Y^0 | X]\)</span>. We could of course build separate models for the counterfactual treatment cases, or include the treatment as a feature, but do you trust a general purpose machine learning algorithm to put special attention to the one thing you’re interested in, the treatment effect?</p>
 <p>We can introduce a control variate in the IPW estimator for potential outcomes as <span class="math inline">\(\mathbb E[\frac{1}{P(T=t_i | X)}Y|X] = \mathbb E[\frac{1}{P(T=t_i | X)}Y - (\frac{\mathbf{1}_{T=t_i}}{P(T=t_i | X)}-1)\widetilde{Y}|X]\)</span> where <span class="math inline">\(\widetilde{Y}\)</span> is some informed guess, an outcome model. In practice this is a 3 stage process: estimate a propensity model <span class="math inline">\(e(x) = P(T=t_i | X)\)</span>, an outcome model <span class="math inline">\(\mu(X) = \mathbb E[Y | X]\)</span>, construct an unbiased estimator of the ATE/CATE by fitting a regression model to the pseudo-labels above.</p>
-<p>The double robustness alluded to is because this estimator is unbiased if we know the true propensity <em>or</em> outcome model. If we don’t, the error scales as the product of these model errors, which is often a good thing. No first order errors in nuisance model specification is also called Neyman Robustness.</p>
+<p>The double robustness alluded to is because this estimator is unbiased if we know the true propensity <em>or</em> outcome model. If we don’t, the error scales as the product of these model errors, which is often a good thing. No first order errors in nuisance model specification is also called Neyman Orthogonality.</p>
 </section>
 <section id="off-policy-evaluation" class="level3">
 <h3 class="anchored" data-anchor-id="off-policy-evaluation">Off-policy Evaluation</h3>

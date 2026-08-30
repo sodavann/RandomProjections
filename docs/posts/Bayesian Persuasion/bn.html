@@ -474,9 +474,9 @@ window.Quarto = {
 <p>The connection to our Bayesian linear regression is obvious if we flip the sign, these are the unnormalized negative log probabilities of a Gaussian prior and likelihood. Adding regularization to our loss function turns the (frequentist) maximum likelihood estimate into a (Bayesian) maximum a posteriori estimate (MAP).</p>
 <p><span class="math display">\[\hat{\theta} = \arg\max_{\theta} \log{p(\theta | x )} = \arg\max_{\theta} \log{p(x | \theta )} + \log{p(\theta )} \\
 = \arg\min_{\theta} \Vert x - f_{\theta}(t) \Vert^2 + \beta \Vert \theta\Vert^2\]</span></p>
-<p>If you were using <span class="math inline">\(L_2\)</span>-regularization you were a Bayesian all along! Whether you call it regularization, shrinkage or a prior the effect is the same: constraining parameter values. Similarly, when you use MSE loss you’re solving the same mathematical problem as Gaussian maximum likelihood, i.e.&nbsp;under the hood you are assuming Gaussian i.i.d errors. Probability theory just refuses to go away!</p>
+<p>If you were using <span class="math inline">\(L_2\)</span>-regularization you were a Bayesian all along! Whether you call it regularization, shrinkage or a prior the effect is the same: constraining parameter values. Similarly, when you use MSE loss you’re solving the same mathematical problem as Gaussian maximum likelihood, i.e.&nbsp;under the hood you are assuming Gaussian errors in terms of any probabilistic model. MSE does however recover a point estimate of the mean under any finite second moment error distribution.</p>
 <p><span class="math inline">\(L_1\)</span>-regularization? A Laplace prior.</p>
-<p>MAE loss? Laplace likelihood.</p>
+<p>MAE loss? Laplace likelihood, recovers a point estimate of the median.</p>
 </section>
 <section id="bayesian-neural-network" class="level2">
 <h2 class="anchored" data-anchor-id="bayesian-neural-network">Bayesian Neural Network</h2>

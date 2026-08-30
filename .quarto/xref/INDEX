@@ -44,5 +44,23 @@
   },
   "posts/Estimators/estimators.ipynb": {
     "estimators.html": "716f5e5d"
+  },
+  "posts/DCS/output/data_summary.md": {
+    "data_summary.html": "c84b66f3"
+  },
+  "posts/DCS/output/dataset_learnings.md": {
+    "dataset_learnings.html": "38b24a86"
+  },
+  "posts/DCS/output/detailed_extraction_notes.md": {
+    "detailed_extraction_notes.html": "4be07bb3"
+  },
+  "posts/DCS/output/extraction_notes.md": {
+    "extraction_notes.html": "c7d8ceb8"
+  },
+  "posts/DCS/analysis/model_analysis.md": {
+    "model_analysis.html": "e31320bd"
+  },
+  "posts/DCS/parsed_results/ocr/ADA451460/ADA451460/ADA451460.md": {
+    "ADA451460.html": "d9098243"
   }
 }

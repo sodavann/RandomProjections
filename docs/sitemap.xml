@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://randomprojections.dev/index.html</loc>
+    <lastmod>2026-08-16T12:31:51.648Z</lastmod>
+  </url>
+  <url>
     <loc>https://randomprojections.dev/posts/Estimators/estimators.html</loc>
-    <lastmod>2026-07-17T15:04:48.503Z</lastmod>
+    <lastmod>2026-08-16T12:31:51.664Z</lastmod>
   </url>
   <url>
     <loc>https://randomprojections.dev/posts/LLMs 2025/LLMs.html</loc>
-    <lastmod>2026-02-11T17:45:41.115Z</lastmod>
+    <lastmod>2026-08-16T12:31:51.664Z</lastmod>
   </url>
   <url>
     <loc>https://randomprojections.dev/posts/Bayesian Persuasion/bn.html</loc>
-    <lastmod>2026-02-11T17:45:41.114Z</lastmod>
-  </url>
-  <url>
-    <loc>https://randomprojections.dev/index.html</loc>
-    <lastmod>2026-02-11T17:45:41.113Z</lastmod>
-  </url>
-  <url>
-    <loc>https://randomprojections.dev/about.html</loc>
-    <lastmod>2026-02-11T17:45:41.107Z</lastmod>
+    <lastmod>2026-08-30T10:57:42.033Z</lastmod>
   </url>
   <url>
     <loc>https://randomprojections.dev/posts/Autodiff/Autodiff.html</loc>
-    <lastmod>2026-02-11T17:45:41.113Z</lastmod>
+    <lastmod>2026-08-16T12:31:51.649Z</lastmod>
   </url>
   <url>
     <loc>https://randomprojections.dev/posts/Causal Avocados/causal.html</loc>
-    <lastmod>2026-02-11T17:45:41.115Z</lastmod>
+    <lastmod>2026-08-16T12:31:51.653Z</lastmod>
   </url>
   <url>
     <loc>https://randomprojections.dev/posts/Nondimensional Features/ndim.html</loc>
-    <lastmod>2026-02-11T17:45:41.118Z</lastmod>
+    <lastmod>2026-08-16T12:31:51.667Z</lastmod>
+  </url>
+  <url>
+    <loc>https://randomprojections.dev/about.html</loc>
+    <lastmod>2026-08-16T12:31:51.638Z</lastmod>
   </url>
 </urlset>
